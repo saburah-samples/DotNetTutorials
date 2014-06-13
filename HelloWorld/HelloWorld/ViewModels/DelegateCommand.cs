@@ -14,7 +14,7 @@ namespace HelloWorld.ViewModels
         private Predicate<object> canExecute;
         private Action<object> execute;
 
-        public DelegateCommand(Action<object> execute, Predicate<object> canExecute)
+        public DelegateCommand(Action<object> execute, Predicate<object> canExecute = null)
         {
             Debug.Assert(execute != null, "Argument 'execute' is null");
 
