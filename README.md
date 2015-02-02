@@ -1,0 +1,1 @@
+http://stylecop.codeplex.com/
