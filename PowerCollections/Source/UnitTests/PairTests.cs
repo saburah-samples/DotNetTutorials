@@ -242,7 +242,7 @@ namespace Wintellect.PowerCollections.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException), "Type \"Wintellect.PowerCollections.Tests.PairTests+Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.PairTests+Unorderable> or IComparable.")]
+        [ExpectedException(typeof(NotSupportedException), ExpectedMessage = "Type \"Wintellect.PowerCollections.Tests.PairTests+Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.PairTests+Unorderable> or IComparable.")]
         public void UncomparableFirst()
         {
             Pair<Unorderable, int> pair1, pair2;
@@ -252,7 +252,7 @@ namespace Wintellect.PowerCollections.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException), "Type \"Wintellect.PowerCollections.Tests.PairTests+Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.PairTests+Unorderable> or IComparable.")]
+        [ExpectedException(typeof(NotSupportedException), ExpectedMessage = "Type \"Wintellect.PowerCollections.Tests.PairTests+Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.PairTests+Unorderable> or IComparable.")]
         public void UncomparableSecond()
         {
             Pair<int, Unorderable> pair1, pair2;

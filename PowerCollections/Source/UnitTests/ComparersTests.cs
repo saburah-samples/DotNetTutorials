@@ -385,7 +385,7 @@ namespace Wintellect.PowerCollections.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException), "Type \"Wintellect.PowerCollections.Tests.Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.Unorderable> or IComparable.")]
+        [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Type \"Wintellect.PowerCollections.Tests.Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.Unorderable> or IComparable.")]
         public void UnorderableType2()
         {
             IComparer<Unorderable> ordering = Comparers.DefaultComparer<Unorderable>();

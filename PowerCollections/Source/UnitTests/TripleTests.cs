@@ -258,7 +258,7 @@ namespace Wintellect.PowerCollections.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException), "Type \"Wintellect.PowerCollections.Tests.TripleTests+Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.TripleTests+Unorderable> or IComparable.")]
+        [ExpectedException(typeof(NotSupportedException), ExpectedMessage = "Type \"Wintellect.PowerCollections.Tests.TripleTests+Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.TripleTests+Unorderable> or IComparable.")]
         public void UncomparableFirst()
         {
             Triple<Unorderable, int, string> triple1, triple2;
@@ -268,7 +268,7 @@ namespace Wintellect.PowerCollections.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException), "Type \"Wintellect.PowerCollections.Tests.TripleTests+Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.TripleTests+Unorderable> or IComparable.")]
+        [ExpectedException(typeof(NotSupportedException), ExpectedMessage = "Type \"Wintellect.PowerCollections.Tests.TripleTests+Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.TripleTests+Unorderable> or IComparable.")]
         public void UncomparableSecond()
         {
             Triple<int, Unorderable, string> triple1, triple2;
@@ -278,7 +278,7 @@ namespace Wintellect.PowerCollections.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException), "Type \"Wintellect.PowerCollections.Tests.TripleTests+Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.TripleTests+Unorderable> or IComparable.")]
+        [ExpectedException(typeof(NotSupportedException), ExpectedMessage = "Type \"Wintellect.PowerCollections.Tests.TripleTests+Unorderable\" does not implement IComparable<Wintellect.PowerCollections.Tests.TripleTests+Unorderable> or IComparable.")]
         public void UncomparableThird()
         {
             Triple<int, string, Unorderable> triple1, triple2;
