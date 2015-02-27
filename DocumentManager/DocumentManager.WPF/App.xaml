@@ -1,0 +1,11 @@
+﻿<Application x:Class="DocumentManager.WPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:DocumentManager.WPF.PersonManagerModule"
+             xmlns:vw="clr-namespace:DocumentManager.WPF.PersonManagerModule">
+    <Application.Resources>
+        <DataTemplate DataType="{x:Type vm:PersonManager}">
+            <vw:PersonManagerView/>
+        </DataTemplate>
+    </Application.Resources>
+</Application>
