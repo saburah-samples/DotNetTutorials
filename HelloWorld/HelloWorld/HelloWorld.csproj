@@ -53,6 +53,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppServices.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\ICustomerRepository.cs" />
     <Compile Include="ViewModels\CustomerListViewModel.cs" />
