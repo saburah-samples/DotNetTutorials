@@ -1,6 +1,7 @@
 ﻿<Window x:Class="DragDropExample.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DragDropExample"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -11,6 +12,8 @@
             Background="Beige">
             <TextBox Width="Auto" Margin="2"
              Text="green"/>
+            <local:Circle Margin="2" />
+            <local:Circle Margin="2" />
         </StackPanel>
         <StackPanel Grid.Column="1"
             Background="Bisque">
