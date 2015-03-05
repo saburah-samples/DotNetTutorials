@@ -9,14 +9,20 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0"
-            Background="Beige">
+            Background="Beige"
+            AllowDrop="True"
+            DragOver="panel_DragOver"
+            Drop="panel_Drop">
             <TextBox Width="Auto" Margin="2"
              Text="green"/>
             <local:Circle Margin="2" />
             <local:Circle Margin="2" />
         </StackPanel>
         <StackPanel Grid.Column="1"
-            Background="Bisque">
+            Background="Bisque"
+            AllowDrop="True"
+            DragOver="panel_DragOver"
+            Drop="panel_Drop">
         </StackPanel>
     </Grid>
 </Window>
