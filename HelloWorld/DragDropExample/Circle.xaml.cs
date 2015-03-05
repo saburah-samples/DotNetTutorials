@@ -20,7 +20,6 @@ namespace DragDropExample
     /// </summary>
     public partial class Circle : UserControl
     {
-        private Brush previousFill;
         public Circle()
         {
             InitializeComponent();
@@ -32,6 +31,42 @@ namespace DragDropExample
             this.circleUI.Height = c.circleUI.Height;
             this.circleUI.Width = c.circleUI.Height;
             this.circleUI.Fill = c.circleUI.Fill;
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                // Package the data.
+                DataObject data = new DataObject();
+                data.SetData(DataFormats.StringFormat, circleUI.Fill.ToString());
+                data.SetData("Double", circleUI.Height);
+                data.SetData("Object", this);
+
+                // Inititate the drag-and-drop operation.
+                DragDrop.DoDragDrop(this, data, DragDropEffects.Copy | DragDropEffects.Move);
+            }
+        }
+
+        protected override void OnGiveFeedback(GiveFeedbackEventArgs e)
+        {
+            base.OnGiveFeedback(e);
+            // These Effects values are set in the drop target's
+            // DragOver event handler.
+            if (e.Effects.HasFlag(DragDropEffects.Copy))
+            {
+                Mouse.SetCursor(Cursors.Cross);
+            }
+            else if (e.Effects.HasFlag(DragDropEffects.Move))
+            {
+                Mouse.SetCursor(Cursors.Pen);
+            }
+            else
+            {
+                Mouse.SetCursor(Cursors.No);
+            }
+            e.Handled = true;
         }
     }
 }
