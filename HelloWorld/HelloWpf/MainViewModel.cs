@@ -14,17 +14,28 @@ namespace HelloWpf
             Device = new MainDevice();
             Device.OnStateChanged += Device_OnStateChanged;
 
-            DeviceTestCommand = new RelayCommand(DoTestDevice, CanTestDevice);
+            DeviceStartTestCommand = new RelayCommand(DoStartTestDevice, CanStartTestDevice);
+            DeviceCompleteTestCommand = new RelayCommand(DoCompleteTestDevice, CanCompleteTestDevice);
         }
 
-        private bool CanTestDevice(object obj)
+        private bool CanCompleteTestDevice(object obj)
         {
             return true;
         }
 
-        private void DoTestDevice(object obj)
+        private void DoCompleteTestDevice(object obj)
         {
-            Device.ExecuteCommand("TEST");
+            Device.ExecuteCommand("Complete test");
+        }
+
+        private bool CanStartTestDevice(object obj)
+        {
+            return true;
+        }
+
+        private void DoStartTestDevice(object obj)
+        {
+            Device.ExecuteCommand("Start test");
         }
 
         void Device_OnStateChanged(object sender, DeviceStateChangedEventArgs e)
@@ -42,6 +53,8 @@ namespace HelloWpf
         /// </summary>
         public MainDevice Device { get; private set; }
 
-        public RelayCommand DeviceTestCommand { get; set; }
+        public RelayCommand DeviceStartTestCommand { get; set; }
+
+        public RelayCommand DeviceCompleteTestCommand { get; set; }
     }
 }

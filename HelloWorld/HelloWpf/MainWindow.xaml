@@ -1,0 +1,27 @@
+﻿<Window x:Class="HelloWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:HelloWpf"
+        Title="MainWindow" Height="350" Width="525">
+    <!-- creation of a viewmodel with using resources -->
+    <Window.Resources>
+        <local:MainViewModel x:Key="ViewModel"/>
+    </Window.Resources>
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <Button Content="Top"/>
+            <local:DeviceButton PressCommand="{Binding Path=DeviceStartTestCommand}"
+                                ReleaseCommand="{Binding Path=DeviceCompleteTestCommand}"
+                                Height="80"/>
+            <Button Content="Bottom"/>
+        </StackPanel>
+        <DockPanel Grid.Column="1">
+            <TextBlock DockPanel.Dock="Top" Text="Command Log"/>
+            <ListBox ItemsSource="{Binding Path=CommandLog}"/>
+        </DockPanel>
+    </Grid>
+</Window>

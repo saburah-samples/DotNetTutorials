@@ -6,10 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="300">
     <Grid>
-        <Button Command="{Binding Path=DeviceTestCommand}">
-            <Grid>
-                <TextBlock Text="Test Device"/>
-            </Grid>
-        </Button>
+        <Button Content="Test Device"/>
+        <!--<TextBlock Text="Test Device"/>-->
     </Grid>
 </UserControl>

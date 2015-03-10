@@ -36,43 +36,57 @@ namespace HelloWpf
         public static readonly DependencyProperty ReleaseCommandParameterProperty =
             DependencyProperty.Register("ReleaseCommandParameter", typeof(object), typeof(DeviceButton), new PropertyMetadata(0));
 
+        private Point startPosition;
+
         public DeviceButton()
         {
             InitializeComponent();
+            IsCommandsPrepared = false;
         }
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseLeftButtonDown(e);
-            IsPressCommandHandled = false;
-        }
-
-        protected override void OnPreviewMouseMove(MouseEventArgs e)
-        {
-            base.OnPreviewMouseMove(e);
-            if (e.LeftButton == MouseButtonState.Pressed)
-                ExecutePressCommand();
+            IsCommandsPrepared = false;
+            startPosition = e.MouseDevice.GetPosition(this);
         }
 
         protected override void OnPreviewMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseUp(e);
             ExecuteReleaseCommand();
-            IsPressCommandHandled = false;
+        }
+
+        protected override void OnMouseLeave(MouseEventArgs e)
+        {
+            base.OnMouseLeave(e);
+            if (e.LeftButton == MouseButtonState.Pressed)
+                ExecuteReleaseCommand();
+        }
+
+        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        {
+            base.OnPreviewMouseMove(e);
+            if (e.LeftButton == MouseButtonState.Pressed && !IsCommandsPrepared)
+            {
+                var position = e.MouseDevice.GetPosition(this);
+                var x = Math.Abs(position.X - startPosition.X);
+                IsCommandsPrepared = (x > 100);
+                ExecutePressCommand();
+            }
         }
 
         private void ExecutePressCommand()
         {
-            if (!IsPressCommandHandled && CanExecutePressCommand())
+            if (CanExecutePressCommand())
             {
                 PressCommand.Execute(PressCommandParameter);
-                IsPressCommandHandled = true;
             }
         }
 
         private bool CanExecutePressCommand()
         {
-            return PressCommand != null && PressCommand.CanExecute(PressCommandParameter);
+            return IsCommandsPrepared && PressCommand != null && PressCommand.CanExecute(PressCommandParameter);
         }
 
         private void ExecuteReleaseCommand()
@@ -85,10 +99,8 @@ namespace HelloWpf
 
         private bool CanExecuteReleaseCommand()
         {
-            return ReleaseCommand != null && ReleaseCommand.CanExecute(ReleaseCommandParameter);
+            return IsCommandsPrepared && ReleaseCommand != null && ReleaseCommand.CanExecute(ReleaseCommandParameter);
         }
-
-        public bool IsPressCommandHandled { get; private set; }
 
         public ICommand PressCommand
         {
@@ -113,5 +125,7 @@ namespace HelloWpf
             get { return (object)GetValue(ReleaseCommandParameterProperty); }
             set { SetValue(ReleaseCommandParameterProperty, value); }
         }
+
+        public bool IsCommandsPrepared { get; set; }
     }
 }
