@@ -13,11 +13,11 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
-            <Button Content="Top"/>
-            <local:DeviceButton PressCommand="{Binding Path=DeviceStartTestCommand}"
-                                ReleaseCommand="{Binding Path=DeviceCompleteTestCommand}"
-                                Height="80"/>
-            <Button Content="Bottom"/>
+            <Button Content="Top" Height="80" Margin="10"/>
+            <local:DeviceButton Height="80" Margin="10,5"
+                                PressCommand="{Binding Path=DeviceStartTestCommand}"
+                                ReleaseCommand="{Binding Path=DeviceCompleteTestCommand}"/>
+            <Button Content="Bottom" Height="80" Margin="10"/>
         </StackPanel>
         <DockPanel Grid.Column="1">
             <TextBlock DockPanel.Dock="Top" Text="Command Log"/>
