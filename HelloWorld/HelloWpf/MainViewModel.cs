@@ -14,8 +14,14 @@ namespace HelloWpf
             Device = new MainDevice();
             Device.OnStateChanged += Device_OnStateChanged;
 
+            ClearCommandLogCommand = new RelayCommand(DoClearCommandLog);
             DeviceStartTestCommand = new RelayCommand(DoStartTestDevice, CanStartTestDevice);
             DeviceCompleteTestCommand = new RelayCommand(DoCompleteTestDevice, CanCompleteTestDevice);
+        }
+
+        private void DoClearCommandLog(object obj)
+        {
+            CommandLog.Clear();
         }
 
         private bool CanCompleteTestDevice(object obj)
@@ -56,5 +62,7 @@ namespace HelloWpf
         public RelayCommand DeviceStartTestCommand { get; set; }
 
         public RelayCommand DeviceCompleteTestCommand { get; set; }
+
+        public RelayCommand ClearCommandLogCommand { get; set; }
     }
 }

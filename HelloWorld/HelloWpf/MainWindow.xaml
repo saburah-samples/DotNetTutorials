@@ -13,7 +13,8 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
-            <Button Content="Top" Height="80" Margin="10"/>
+            <Button Content="Clear command log" Height="80" Margin="10"
+                    Command="{Binding Path=ClearCommandLogCommand}"/>
             <local:DeviceButton Height="80" Margin="10,5"
                                 PressCommand="{Binding Path=DeviceStartTestCommand}"
                                 ReleaseCommand="{Binding Path=DeviceCompleteTestCommand}"/>
