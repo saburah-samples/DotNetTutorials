@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -18,7 +20,7 @@ namespace HelloWpf
     /// <summary>
     /// Interaction logic for DeviceButton.xaml
     /// </summary>
-    public partial class DeviceButton : UserControl
+    public partial class DeviceButton : Button
     {
         // Using a DependencyProperty as the backing store for PressCommand.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PressCommandProperty =
@@ -37,18 +39,32 @@ namespace HelloWpf
             DependencyProperty.Register("ReleaseCommandParameter", typeof(object), typeof(DeviceButton), new PropertyMetadata(0));
 
         private Point startPosition;
+        private bool isCommandsPrepared;
 
         public DeviceButton()
         {
             InitializeComponent();
-            IsCommandsPrepared = false;
+            isCommandsPrepared = false;
         }
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseLeftButtonDown(e);
-            IsCommandsPrepared = false;
             startPosition = e.MouseDevice.GetPosition(this);
+            isCommandsPrepared = false;
+        }
+
+        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        {
+            base.OnPreviewMouseMove(e);
+            if (e.LeftButton == MouseButtonState.Pressed && !isCommandsPrepared)
+            {
+                var position = e.MouseDevice.GetPosition(this);
+                var x = Math.Abs(position.X - startPosition.X);
+                var y = Math.Abs(position.Y - startPosition.Y);
+                isCommandsPrepared = (x > 100) && (position.X < ActualWidth) && (position.Y < ActualHeight);
+                ExecutePressCommand();
+            }
         }
 
         protected override void OnPreviewMouseLeftButtonUp(MouseButtonEventArgs e)
@@ -64,18 +80,6 @@ namespace HelloWpf
                 ExecuteReleaseCommand();
         }
 
-        protected override void OnPreviewMouseMove(MouseEventArgs e)
-        {
-            base.OnPreviewMouseMove(e);
-            if (e.LeftButton == MouseButtonState.Pressed && !IsCommandsPrepared)
-            {
-                var position = e.MouseDevice.GetPosition(this);
-                var x = Math.Abs(position.X - startPosition.X);
-                IsCommandsPrepared = (x > 100);
-                ExecutePressCommand();
-            }
-        }
-
         private void ExecutePressCommand()
         {
             if (CanExecutePressCommand())
@@ -86,7 +90,7 @@ namespace HelloWpf
 
         private bool CanExecutePressCommand()
         {
-            return IsCommandsPrepared && PressCommand != null && PressCommand.CanExecute(PressCommandParameter);
+            return isCommandsPrepared && PressCommand != null && PressCommand.CanExecute(PressCommandParameter);
         }
 
         private void ExecuteReleaseCommand()
@@ -99,7 +103,7 @@ namespace HelloWpf
 
         private bool CanExecuteReleaseCommand()
         {
-            return IsCommandsPrepared && ReleaseCommand != null && ReleaseCommand.CanExecute(ReleaseCommandParameter);
+            return isCommandsPrepared && ReleaseCommand != null && ReleaseCommand.CanExecute(ReleaseCommandParameter);
         }
 
         public ICommand PressCommand
@@ -125,7 +129,5 @@ namespace HelloWpf
             get { return (object)GetValue(ReleaseCommandParameterProperty); }
             set { SetValue(ReleaseCommandParameterProperty, value); }
         }
-
-        public bool IsCommandsPrepared { get; set; }
     }
 }
