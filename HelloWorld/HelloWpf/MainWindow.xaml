@@ -16,6 +16,8 @@
             <Button Content="Clear command log" Height="80" Margin="10"
                     Command="{Binding Path=ClearCommandLogCommand}"/>
             <local:DeviceButton Height="80" Margin="10,5"
+                                LatchSize="100"
+                                LatchAreaDivider="2"
                                 PressCommand="{Binding Path=DeviceStartTestCommand}"
                                 ReleaseCommand="{Binding Path=DeviceCompleteTestCommand}">
             </local:DeviceButton>

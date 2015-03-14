@@ -28,7 +28,7 @@ namespace HelloWpf
 
         // Using a DependencyProperty as the backing store for PressCommandParameter.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PressCommandParameterProperty =
-            DependencyProperty.Register("PressCommandParameter", typeof(object), typeof(DeviceButton), new PropertyMetadata(0));
+            DependencyProperty.Register("PressCommandParameter", typeof(object), typeof(DeviceButton), new PropertyMetadata(null));
 
         // Using a DependencyProperty as the backing store for ReleaseCommand.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ReleaseCommandProperty =
@@ -36,7 +36,19 @@ namespace HelloWpf
 
         // Using a DependencyProperty as the backing store for ReleaseCommandParameter.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ReleaseCommandParameterProperty =
-            DependencyProperty.Register("ReleaseCommandParameter", typeof(object), typeof(DeviceButton), new PropertyMetadata(0));
+            DependencyProperty.Register("ReleaseCommandParameter", typeof(object), typeof(DeviceButton), new PropertyMetadata(null));
+
+        // Using a DependencyProperty as the backing store for LatchValue.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty LatchValueProperty =
+            DependencyProperty.Register("LatchValue", typeof(double), typeof(DeviceButton), new PropertyMetadata(0.0));
+
+        // Using a DependencyProperty as the backing store for LatchSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty LatchSizeProperty =
+            DependencyProperty.Register("LatchSize", typeof(double), typeof(DeviceButton), new PropertyMetadata(100.0));
+
+        // Using a DependencyProperty as the backing store for LatchAreaDivider.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty LatchAreaDividerProperty =
+            DependencyProperty.Register("LatchAreaDivider", typeof(double), typeof(DeviceButton), new PropertyMetadata(2.0));
 
         private Point startPosition;
         private bool isCommandsPrepared;
@@ -45,6 +57,7 @@ namespace HelloWpf
         {
             InitializeComponent();
             isCommandsPrepared = false;
+            //TODO: remove all PushIndicator, ButtonTitle
         }
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -52,21 +65,34 @@ namespace HelloWpf
             base.OnPreviewMouseLeftButtonDown(e);
             startPosition = e.MouseDevice.GetPosition(this);
             isCommandsPrepared = false;
-            PushIndicator.Visibility = System.Windows.Visibility.Visible;
-            //e.Handled = true;
+            PushIndicator.Maximum = ActualLatchSize;
+            if (startPosition.X * LatchAreaDivider < ActualWidth)
+            {
+                PushIndicator.Visibility = System.Windows.Visibility.Visible;
+                PushIndicator.Value = 0;
+                LatchValue = 0;
+            }
         }
 
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             base.OnPreviewMouseMove(e);
-            if (e.LeftButton == MouseButtonState.Pressed && !isCommandsPrepared)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var position = e.MouseDevice.GetPosition(this);
-                var x = Math.Abs(position.X - startPosition.X);
-                var y = Math.Abs(position.Y - startPosition.Y);
-                isCommandsPrepared = (x > 100) && (position.X < ActualWidth) && (position.Y < ActualHeight);
-                PushIndicator.Value = x;
-                ExecutePressCommand();
+                if (position.X > ActualWidth || position.Y > ActualHeight)
+                {
+                    if (IsMouseCaptured)
+                        ReleaseMouseCapture();
+                }
+                else
+                if (startPosition.X * LatchAreaDivider < ActualWidth && !isCommandsPrepared)
+                {
+                    var LatchValue = Math.Max(0, position.X - startPosition.X);
+                    isCommandsPrepared = (LatchValue >= ActualLatchSize);
+                    PushIndicator.Value = LatchValue;
+                    ExecutePressCommand();
+                }
             }
         }
 
@@ -135,6 +161,29 @@ namespace HelloWpf
         {
             get { return (object)GetValue(ReleaseCommandParameterProperty); }
             set { SetValue(ReleaseCommandParameterProperty, value); }
+        }
+
+        public double LatchValue
+        {
+            get { return (double)GetValue(LatchValueProperty); }
+            set { SetValue(LatchValueProperty, value); }
+        }
+
+        public double LatchSize
+        {
+            get { return (double)GetValue(LatchSizeProperty); }
+            set { SetValue(LatchSizeProperty, value); }
+        }
+
+        public double LatchAreaDivider
+        {
+            get { return (double)GetValue(LatchAreaDividerProperty); }
+            set { SetValue(LatchAreaDividerProperty, value); }
+        }
+
+        public double ActualLatchSize
+        {
+            get { return Math.Min(LatchSize, ActualWidth - BorderThickness.Left - BorderThickness.Right); }
         }
     }
 }
