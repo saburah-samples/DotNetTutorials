@@ -52,6 +52,8 @@ namespace HelloWpf
             base.OnPreviewMouseLeftButtonDown(e);
             startPosition = e.MouseDevice.GetPosition(this);
             isCommandsPrepared = false;
+            PushIndicator.Visibility = System.Windows.Visibility.Visible;
+            //e.Handled = true;
         }
 
         protected override void OnPreviewMouseMove(MouseEventArgs e)
@@ -63,6 +65,7 @@ namespace HelloWpf
                 var x = Math.Abs(position.X - startPosition.X);
                 var y = Math.Abs(position.Y - startPosition.Y);
                 isCommandsPrepared = (x > 100) && (position.X < ActualWidth) && (position.Y < ActualHeight);
+                PushIndicator.Value = x;
                 ExecutePressCommand();
             }
         }
@@ -71,13 +74,17 @@ namespace HelloWpf
         {
             base.OnPreviewMouseUp(e);
             ExecuteReleaseCommand();
+            PushIndicator.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
             base.OnMouseLeave(e);
             if (e.LeftButton == MouseButtonState.Pressed)
+            {
                 ExecuteReleaseCommand();
+                PushIndicator.Visibility = System.Windows.Visibility.Collapsed;
+            }
         }
 
         private void ExecutePressCommand()

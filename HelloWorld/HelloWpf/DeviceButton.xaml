@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="300">
     <Grid>
-        <!--<Button Content="Test Device"/>-->
-        <!--<TextBlock Text="Test Device"/>-->
+        <ProgressBar x:Name="PushIndicator" Background="AliceBlue" Visibility="Collapsed"/>
+        <TextBlock x:Name="ButtonTitle" Text="Test Device Button"/>
     </Grid>
 </Button>
