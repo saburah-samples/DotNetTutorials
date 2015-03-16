@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,34 +51,29 @@ namespace HelloWpf
         public static readonly DependencyProperty LatchAreaDividerProperty =
             DependencyProperty.Register("LatchAreaDivider", typeof(double), typeof(DeviceButton), new PropertyMetadata(2.0));
 
+        // Using a DependencyProperty as the backing store for IsLatchActive.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsLatchActiveProperty =
+            DependencyProperty.Register("IsLatchActive", typeof(bool), typeof(DeviceButton), new PropertyMetadata(false));
+
         private Point startPosition;
-        private bool isCommandsPrepared;
 
         public DeviceButton()
         {
             InitializeComponent();
-            isCommandsPrepared = false;
-            //TODO: remove all PushIndicator, ButtonTitle
         }
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseLeftButtonDown(e);
             startPosition = e.MouseDevice.GetPosition(this);
-            isCommandsPrepared = false;
-            PushIndicator.Maximum = ActualLatchSize;
-            if (startPosition.X * LatchAreaDivider < ActualWidth)
-            {
-                PushIndicator.Visibility = System.Windows.Visibility.Visible;
-                PushIndicator.Value = 0;
-                LatchValue = 0;
-            }
+            IsLatchActive = IsInLatchArea(startPosition);
+            LatchValue = 0;
         }
 
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             base.OnPreviewMouseMove(e);
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (IsPressed)
             {
                 var position = e.MouseDevice.GetPosition(this);
                 if (position.X > ActualWidth || position.Y > ActualHeight)
@@ -85,12 +81,9 @@ namespace HelloWpf
                     if (IsMouseCaptured)
                         ReleaseMouseCapture();
                 }
-                else
-                if (startPosition.X * LatchAreaDivider < ActualWidth && !isCommandsPrepared)
+                else if (IsLatchActive && IsLatched)
                 {
-                    var LatchValue = Math.Max(0, position.X - startPosition.X);
-                    isCommandsPrepared = (LatchValue >= ActualLatchSize);
-                    PushIndicator.Value = LatchValue;
+                    LatchValue = Math.Round(Math.Max(0, position.X - startPosition.X));
                     ExecutePressCommand();
                 }
             }
@@ -100,17 +93,19 @@ namespace HelloWpf
         {
             base.OnPreviewMouseUp(e);
             ExecuteReleaseCommand();
-            PushIndicator.Visibility = System.Windows.Visibility.Collapsed;
+            IsLatchActive = false;
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
             base.OnMouseLeave(e);
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                ExecuteReleaseCommand();
-                PushIndicator.Visibility = System.Windows.Visibility.Collapsed;
-            }
+            ExecuteReleaseCommand();
+            IsLatchActive = false;
+        }
+
+        private bool IsInLatchArea(Point position)
+        {
+            return position.X * LatchAreaDivider < ActualWidth;
         }
 
         private void ExecutePressCommand()
@@ -123,7 +118,7 @@ namespace HelloWpf
 
         private bool CanExecutePressCommand()
         {
-            return isCommandsPrepared && PressCommand != null && PressCommand.CanExecute(PressCommandParameter);
+            return IsLatchActive && !IsLatched && PressCommand != null && PressCommand.CanExecute(PressCommandParameter);
         }
 
         private void ExecuteReleaseCommand()
@@ -136,7 +131,7 @@ namespace HelloWpf
 
         private bool CanExecuteReleaseCommand()
         {
-            return isCommandsPrepared && ReleaseCommand != null && ReleaseCommand.CanExecute(ReleaseCommandParameter);
+            return IsLatchActive && !IsLatched && ReleaseCommand != null && ReleaseCommand.CanExecute(ReleaseCommandParameter);
         }
 
         public ICommand PressCommand
@@ -184,6 +179,17 @@ namespace HelloWpf
         public double ActualLatchSize
         {
             get { return Math.Min(LatchSize, ActualWidth - BorderThickness.Left - BorderThickness.Right); }
+        }
+
+        public bool IsLatched
+        {
+            get { return LatchValue < ActualLatchSize; }
+        }
+
+        public bool IsLatchActive
+        {
+            get { return (bool)GetValue(IsLatchActiveProperty); }
+            set { SetValue(IsLatchActiveProperty, value); }
         }
     }
 }

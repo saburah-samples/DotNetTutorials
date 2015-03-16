@@ -1,16 +1,40 @@
 ﻿<Button x:Class="HelloWpf.DeviceButton"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="300"
-        HorizontalContentAlignment="Stretch"
-        VerticalContentAlignment="Stretch">
-    <Grid>
-        <ProgressBar x:Name="PushIndicator" Background="AliceBlue" Visibility="Collapsed"/>
-        <TextBlock x:Name="ButtonTitle" Text="Test Device Button"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
-    </Grid>
+        xmlns:local="clr-namespace:HelloWpf"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        mc:Ignorable="d" 
+        d:DesignHeight="100" d:DesignWidth="300">
+
+    <Button.Style>
+        <Style TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="RootElement"
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid Margin="0" Background="Transparent">
+                                <ProgressBar Name="LatchBar" Margin="10"
+                                             Value="{Binding Path=LatchValue, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:DeviceButton}}"
+                                             Maximum="{Binding Path=ActualLatchSize, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:DeviceButton}}">
+                                </ProgressBar>
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="LatchBar" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="False">
+                                <Setter TargetName="LatchBar" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Button.Style>
 </Button>
