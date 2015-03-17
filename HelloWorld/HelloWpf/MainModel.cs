@@ -8,6 +8,11 @@ namespace HelloWpf
 {
     public class MainDevice : INotifyDeviceStateChanged
     {
+        public MainDevice()
+        {
+            State = "None";
+            Command = "None";
+        }
         public void ExecuteCommand(string command, params string[] args)
         {
             Command = command;
