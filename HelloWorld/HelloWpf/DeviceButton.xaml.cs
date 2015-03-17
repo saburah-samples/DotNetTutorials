@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 
 namespace HelloWpf
 {
+
     /// <summary>
     /// Interaction logic for DeviceButton.xaml
     /// </summary>
@@ -94,6 +95,7 @@ namespace HelloWpf
             base.OnPreviewMouseUp(e);
             ExecuteReleaseCommand();
             IsLatchActive = false;
+            LatchValue = 0;
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
@@ -101,11 +103,12 @@ namespace HelloWpf
             base.OnMouseLeave(e);
             ExecuteReleaseCommand();
             IsLatchActive = false;
+            LatchValue = 0;
         }
 
         private bool IsInLatchArea(Point position)
         {
-            return position.X * LatchAreaDivider < ActualWidth;
+            return position.X > 0 && position.X * LatchAreaDivider < ActualWidth;
         }
 
         private void ExecutePressCommand()
