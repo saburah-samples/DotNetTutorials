@@ -43,21 +43,16 @@
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <RepeatButton Name="UpButton"
+                              DockPanel.Dock="Right"
+                              Margin="5,5,5,5"
+                              Content="Up"/>
 
-                <Border Grid.RowSpan="2"
-                        BorderThickness="1"
+                <Border BorderThickness="1"
                         BorderBrush="Gray"
                         Background="#E0FFFFFF"
-                        Margin="7,2,2,2"
+                        Margin="2,2,2,2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                     <!-- bind the TextBlock to the Value property -->
@@ -68,24 +63,19 @@
                                Text="{Binding Path=Value, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:NumericUpDown}}"/>
                 </Border>
 
-                <RepeatButton Name="UpButton"
-                              Grid.Column="1" Grid.Row="0"
-                              Margin="2,5,5,0"
-                              Content="Up"/>
                 <RepeatButton Name="DownButton"
-                              Grid.Column="1" Grid.Row="1"
-                              Margin="2,0,5,5"
+                              DockPanel.Dock="Left"
+                              Margin="5,5,5,5"
                               Content="Down"/>
                 
-                <Rectangle Name="FocusVisual"
-                           Grid.ColumnSpan="2" Grid.RowSpan="2"
+            </StackPanel>
+            <Rectangle Name="FocusVisual"
                            Stroke="Black"
                            StrokeThickness="1"
                            Visibility="Collapsed"/>
-            </Grid>
         </Grid>
     </ControlTemplate>
-    
+
     <Style TargetType="local:NumericUpDown">
         <Setter Property="Template" Value="{DynamicResource NumericUpDownTemplate}"/>
     </Style>

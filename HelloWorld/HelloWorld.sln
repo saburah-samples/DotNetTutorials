@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DragDropExample", "DragDropExample\DragDropExample.csproj", "{C61C5BC7-52DC-4F88-9C1C-C61AB5C0E5B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWpf", "HelloWpf\HelloWpf.csproj", "{0F41153B-DB65-42AF-9773-D868F0F989FE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0B51D664-8562-4C66-9996-67F26791D3A7} = {0B51D664-8562-4C66-9996-67F26791D3A7}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicManipulation", "BasicManipulation\BasicManipulation.csproj", "{5DBEF7E0-1794-4B36-9B62-186C3C2532AE}"
 EndProject

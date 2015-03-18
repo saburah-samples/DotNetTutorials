@@ -61,6 +61,7 @@
         </StackPanel>
         <DockPanel Grid.Column="1">
             <ctls:NumericUpDown DockPanel.Dock="Top" Height="40"/>
+            <CheckBox DockPanel.Dock="Top" Template="{DynamicResource SwitchBoxTemplate}"/>
             <TextBlock DockPanel.Dock="Top" Text="Command Log"/>
             <ListBox ItemsSource="{Binding Path=CommandLog}"/>
         </DockPanel>
