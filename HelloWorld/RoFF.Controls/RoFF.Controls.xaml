@@ -1,0 +1,92 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:local="clr-namespace:RoFF.Controls"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ControlTemplate TargetType="local:NumericUpDown" x:Key="NumericUpDownTemplate">
+        <Grid Margin="3"
+              Background="{TemplateBinding Background}">
+
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup Name="ValueStates">
+                    <!--Make the Value property red when it is negative.-->
+                    <VisualState Name="Negative">
+                        <Storyboard>
+                            <ColorAnimation To="Red"
+                                            Storyboard.TargetName="TextBlock"
+                                            Storyboard.TargetProperty="(Foreground).(Color)"/>
+                        </Storyboard>
+                    </VisualState>
+                    <!--Return the TextBlock's Foreground to its original color.-->
+                    <VisualState Name="Positive">
+                        <!--Do nothing-->
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup Name="FocusStates">
+                    <!--Add a focus rectangle to highlight the entire control when it has focus.-->
+                    <VisualState Name="Focused">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FocusVisual"
+                                                           Storyboard.TargetProperty="Visibility"
+                                                           Duration="0">
+                                <DiscreteObjectKeyFrame KeyTime="0">
+                                    <DiscreteObjectKeyFrame.Value>
+                                        <Visibility>Visible</Visibility>
+                                    </DiscreteObjectKeyFrame.Value>
+                                </DiscreteObjectKeyFrame>
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <!--Return the control to its initial state by hiding the focus rectangle.-->
+                    <VisualState Name="Unfocused">
+                        <!--Do nothing-->
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.RowSpan="2"
+                        BorderThickness="1"
+                        BorderBrush="Gray"
+                        Background="#E0FFFFFF"
+                        Margin="7,2,2,2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                    <!-- bind the TextBlock to the Value property -->
+                    <TextBlock Name="TextBlock"
+                               Width="60"
+                               Padding="5"
+                               TextAlignment="Right"
+                               Text="{Binding Path=Value, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:NumericUpDown}}"/>
+                </Border>
+
+                <RepeatButton Name="UpButton"
+                              Grid.Column="1" Grid.Row="0"
+                              Margin="2,5,5,0"
+                              Content="Up"/>
+                <RepeatButton Name="DownButton"
+                              Grid.Column="1" Grid.Row="1"
+                              Margin="2,0,5,5"
+                              Content="Down"/>
+                
+                <Rectangle Name="FocusVisual"
+                           Grid.ColumnSpan="2" Grid.RowSpan="2"
+                           Stroke="Black"
+                           StrokeThickness="1"
+                           Visibility="Collapsed"/>
+            </Grid>
+        </Grid>
+    </ControlTemplate>
+    
+    <Style TargetType="local:NumericUpDown">
+        <Setter Property="Template" Value="{DynamicResource NumericUpDownTemplate}"/>
+    </Style>
+</ResourceDictionary>
