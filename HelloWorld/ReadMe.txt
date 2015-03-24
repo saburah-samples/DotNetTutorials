@@ -5,6 +5,7 @@ C:\Program Files\Microsoft.NET\SDK\v2.0 64bit\Bin\Mage.exe
 C:\Program Files (x86)\Windows Kits\8.1\bin\x64\MakeCert.exe
 C:\Program Files (x86)\Windows Kits\8.1\bin\x64\CertMgr.exe
 C:\Program Files (x86)\Windows Kits\8.1\bin\x64\pvk2pfx.exe
+%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\MsBuild.exe
 
 Создание сертификата
 1. Сгенерировать сертификат HelloWpf в хранилище сертификатов My
@@ -18,3 +19,16 @@ https://www.techdays.ru/videos/1274.html
 
 Creating Publisher Certificates For ClickOnce
 http://geekswithblogs.net/kobush/archive/2005/05/30/41068.aspx
+
+MSBuild
+https://msdn.microsoft.com/ru-ru/library/dd393574.aspx
+Основные возможности MSBuild
+https://msdn.microsoft.com/ru-ru/library/dd637714.aspx
+Пошаговое руководство. Создание файла проекта MSBuild с нуля
+https://msdn.microsoft.com/ru-ru/library/dd576348.aspx
+Справочные сведения о задачах MSBuild
+https://msdn.microsoft.com/ru-ru/library/7z253716.aspx
+Элемент Output (MSBuild)
+https://msdn.microsoft.com/ru-ru/library/ms164287.aspx
+Справочные сведения о схеме файлов проектов MSBuild
+https://msdn.microsoft.com/ru-ru/library/5dy88c2e.aspx

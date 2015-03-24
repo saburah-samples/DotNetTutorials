@@ -1,0 +1,40 @@
+<Project DefaultTargets="Clear;Compile;PrepareToPublish" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+
+    <!-- <UsingTask AssemblyFile="Tasks\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Compression.DNZip" />-->
+
+    <PropertyGroup>
+        <AppName>$(MSBuildProjectName)</AppName>
+        <PublishFolder>app.publish\files\$(AppName)_1_0_0_0</PublishFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Projects Include="$(AppName)\$(AppName).csproj"/>
+        <OutputFile Include="$(AppName)"/>
+    </ItemGroup>
+
+    <Target Name="Clear">
+        <RemoveDir Directories="$(PublishFolder)" />
+    </Target>
+
+    <Target Name="Compile">
+        <Message Text="Compile $(AppName) ..." Importance="high" />
+        <MSBuild Projects="@(Projects)">
+            <Output TaskParameter="TargetOutputs" ItemName="OutputFile"/>
+        </MSBuild>
+    </Target>
+
+    <Target Name="PrepareToPublish">
+        <Message Text="Prepare to publish $(AppName)..." Importance="high"/>
+        <PropertyGroup>
+            <FilesForCopyPattern>
+                @(OutputFile->'%(RootDir)%(Directory)*.exe');
+                @(OutputFile->'%(RootDir)%(Directory)*.dll');
+                @(OutputFile->'%(RootDir)%(Directory)*.exe.config')
+            </FilesForCopyPattern>
+        </PropertyGroup>
+        <ItemGroup>
+            <FilesForCopy Include="$(FilesForCopyPattern)"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(FilesForCopy)" DestinationFolder="$(PublishFolder)" />
+    </Target>
+</Project>
