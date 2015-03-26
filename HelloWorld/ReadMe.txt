@@ -20,6 +20,8 @@ https://msdn.microsoft.com/en-us/library/system.deployment.application(v=vs.110)
 Использование ClickOnce для быстрого разворачивания приложений
 https://www.techdays.ru/videos/1274.html
 00:13:00 - пример использования ApplicationDeployment
+00:15:00 - манифест приложения и манифест развертывания
+00:16:00 - развертывание из командной строки msbuild /t:publish
 
 Creating Publisher Certificates For ClickOnce
 http://geekswithblogs.net/kobush/archive/2005/05/30/41068.aspx
