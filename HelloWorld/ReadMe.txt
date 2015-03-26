@@ -14,6 +14,9 @@ C:\Program Files (x86)\Windows Kits\8.1\bin\x64\pvk2pfx.exe
 3. Поместить сертификат в "Доверенные корневые центры сертификации" - чтобы UAC не выдавал сообщения
 	certmgr.exe -add certificate.cer -c -s -r localMachine TrustedPublisher
 
+System.Deployment.Application Namespace
+https://msdn.microsoft.com/en-us/library/system.deployment.application(v=vs.110).aspx
+
 Использование ClickOnce для быстрого разворачивания приложений
 https://www.techdays.ru/videos/1274.html
 
