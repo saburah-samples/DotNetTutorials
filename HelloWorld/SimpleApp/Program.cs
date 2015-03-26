@@ -12,7 +12,11 @@ namespace SimpleApp
         static void Main(string[] args)
         {
             if (ApplicationDeployment.IsNetworkDeployed)
+            {
                 Console.WriteLine("ClickOnce Enabled");
+                var deployment = ApplicationDeployment.CurrentDeployment;
+                Console.WriteLine("Deployment version: {0}", deployment.CurrentVersion);
+            }
             else
                 Console.WriteLine("ClickOnce Disabled");
             Console.WriteLine("BaseDirectory={0}", AppDomain.CurrentDomain.BaseDirectory);
