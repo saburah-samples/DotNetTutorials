@@ -1,12 +1,43 @@
 ﻿<Button x:Class="HelloWpf.DeviceButton"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="300">
-    <Grid>
-        <!--<Button Content="Test Device"/>-->
-        <!--<TextBlock Text="Test Device"/>-->
-    </Grid>
+        xmlns:local="clr-namespace:HelloWpf"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        mc:Ignorable="d" 
+        d:DesignHeight="100" d:DesignWidth="300">
+
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border x:Name="Border"
+                    BorderThickness="1"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    Background="{TemplateBinding Background}">
+                <Grid Margin="0" Background="Transparent">
+                    <ProgressBar Name="LatchBar" Margin="10" Focusable="False" Orientation="Horizontal"
+                                 Value="{Binding Path=LatchValue, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:DeviceButton}}"
+                                 Maximum="{Binding Path=ActualLatchSize, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:DeviceButton}}">
+                    </ProgressBar>
+                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="LatchBar" Property="Visibility" Value="Visible"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="False">
+                    <Setter TargetName="LatchBar" Property="Visibility" Value="Collapsed"/>
+                </Trigger>
+                <!--<DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:DeviceButton}, Path=IsLatchActive}"
+                             Value="True">
+                    <Setter TargetName="LatchBar" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:DeviceButton}, Path=IsLatchActive}"
+                             Value="False">
+                    <Setter TargetName="LatchBar" Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>-->
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
 </Button>
