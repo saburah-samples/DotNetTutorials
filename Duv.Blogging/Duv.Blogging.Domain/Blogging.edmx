@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Blogging.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="BloggingStoreContainer">
+    <EntitySet Name="Persons" EntityType="Blogging.Store.Persons" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Entries" EntityType="Blogging.Store.Entries" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Blogs" EntityType="Blogging.Store.Blogs" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Entries_Post" EntityType="Blogging.Store.Entries_Post" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Entries_Comment" EntityType="Blogging.Store.Entries_Comment" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="PersonEntry" Association="Blogging.Store.PersonEntries">
+      <End Role="Person" EntitySet="Persons" />
+      <End Role="Entry" EntitySet="Entries" />
+    </AssociationSet>
+    <AssociationSet Name="PersonBlog" Association="Blogging.Store.PersonBlogs">
+      <End Role="Person" EntitySet="Persons" />
+      <End Role="Blog" EntitySet="Blogs" />
+    </AssociationSet>
+    <AssociationSet Name="BlogPost" Association="Blogging.Store.BlogPosts">
+      <End Role="Blog" EntitySet="Blogs" />
+      <End Role="Post" EntitySet="Entries_Post" />
+    </AssociationSet>
+    <AssociationSet Name="PostComment" Association="Blogging.Store.PostComments">
+      <End Role="Post" EntitySet="Entries_Post" />
+      <End Role="Comment" EntitySet="Entries_Comment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Post_inherits_Entry" Association="Blogging.Store.FK_Post_inherits_Entry">
+      <End Role="Entry" EntitySet="Entries" />
+      <End Role="Post" EntitySet="Entries_Post" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Comment_inherits_Entry" Association="Blogging.Store.FK_Comment_inherits_Entry">
+      <End Role="Entry" EntitySet="Entries" />
+      <End Role="Comment" EntitySet="Entries_Comment" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Persons">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Entries">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Created" Type="datetime" Nullable="false" />
+    <Property Name="Modified" Type="datetime" Nullable="false" />
+    <Property Name="Body" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Author_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Blogs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Url" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Owner_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Entries_Post">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="PermaLink" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Blog_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Entries_Comment">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Post_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="PersonEntries">
+    <End Role="Person" Type="Blogging.Store.Persons" Multiplicity="1" />
+    <End Role="Entry" Type="Blogging.Store.Entries" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Entry">
+        <PropertyRef Name="Author_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PersonBlogs">
+    <End Role="Person" Type="Blogging.Store.Persons" Multiplicity="1" />
+    <End Role="Blog" Type="Blogging.Store.Blogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Blog">
+        <PropertyRef Name="Owner_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BlogPosts">
+    <End Role="Blog" Type="Blogging.Store.Blogs" Multiplicity="1" />
+    <End Role="Post" Type="Blogging.Store.Entries_Post" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Blog">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Post">
+        <PropertyRef Name="Blog_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PostComments">
+    <End Role="Post" Type="Blogging.Store.Entries_Post" Multiplicity="1" />
+    <End Role="Comment" Type="Blogging.Store.Entries_Comment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Post">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Comment">
+        <PropertyRef Name="Post_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Post_inherits_Entry">
+    <End Role="Entry" Type="Blogging.Store.Entries" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Post" Type="Blogging.Store.Entries_Post" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Entry">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Post">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Comment_inherits_Entry">
+    <End Role="Entry" Type="Blogging.Store.Entries" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Comment" Type="Blogging.Store.Entries_Comment" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Entry">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Comment">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Blogging" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="BloggingContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Persons" EntityType="Blogging.Person" />
+          <EntitySet Name="Entries" EntityType="Blogging.Entry" />
+          <AssociationSet Name="PersonEntry" Association="Blogging.PersonEntries">
+            <End Role="Person" EntitySet="Persons" />
+            <End Role="Entry" EntitySet="Entries" />
+          </AssociationSet>
+          <EntitySet Name="Blogs" EntityType="Blogging.Blog" />
+          <AssociationSet Name="PersonBlog" Association="Blogging.PersonBlogs">
+            <End Role="Person" EntitySet="Persons" />
+            <End Role="Blog" EntitySet="Blogs" />
+          </AssociationSet>
+          <AssociationSet Name="BlogPost" Association="Blogging.BlogPosts">
+            <End Role="Blog" EntitySet="Blogs" />
+            <End Role="Post" EntitySet="Entries" />
+          </AssociationSet>
+          <AssociationSet Name="PostComment" Association="Blogging.PostComments">
+            <End Role="Post" EntitySet="Entries" />
+            <End Role="Comment" EntitySet="Entries" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Email" Type="String" Nullable="false" />
+          <NavigationProperty Name="Entries" Relationship="Blogging.PersonEntries" FromRole="Person" ToRole="Entry" />
+          <NavigationProperty Name="Blogs" Relationship="Blogging.PersonBlogs" FromRole="Person" ToRole="Blog" />
+        </EntityType>
+        <EntityType Name="Entry">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" />
+          <Property Name="Modified" Type="DateTime" Nullable="false" />
+          <Property Name="Body" Type="String" Nullable="false" />
+          <NavigationProperty Name="Author" Relationship="Blogging.PersonEntries" FromRole="Entry" ToRole="Person" />
+        </EntityType>
+        <Association Name="PersonEntries">
+          <End Type="Blogging.Person" Role="Person" Multiplicity="1" />
+          <End Type="Blogging.Entry" Role="Entry" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Blog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Url" Type="String" Nullable="false" />
+          <NavigationProperty Name="Owner" Relationship="Blogging.PersonBlogs" FromRole="Blog" ToRole="Person" />
+          <NavigationProperty Name="Posts" Relationship="Blogging.BlogPosts" FromRole="Blog" ToRole="Post" />
+        </EntityType>
+        <Association Name="PersonBlogs">
+          <End Type="Blogging.Person" Role="Person" Multiplicity="1" />
+          <End Type="Blogging.Blog" Role="Blog" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Post" BaseType="Blogging.Entry" >
+          <Property Name="PermaLink" Type="String" Nullable="false" />
+          <NavigationProperty Name="Blog" Relationship="Blogging.BlogPosts" FromRole="Post" ToRole="Blog" />
+          <NavigationProperty Name="Comments" Relationship="Blogging.PostComments" FromRole="Post" ToRole="Comment" />
+        </EntityType>
+        <Association Name="BlogPosts">
+          <End Type="Blogging.Blog" Role="Blog" Multiplicity="1" />
+          <End Type="Blogging.Post" Role="Post" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Comment" BaseType="Blogging.Entry" >
+          <NavigationProperty Name="Post" Relationship="Blogging.PostComments" FromRole="Comment" ToRole="Post" />
+        </EntityType>
+        <Association Name="PostComments">
+          <End Type="Blogging.Post" Role="Post" Multiplicity="1" />
+          <End Type="Blogging.Comment" Role="Comment" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="BloggingStoreContainer" CdmEntityContainer="BloggingContainer">
+    <EntitySetMapping Name="Persons">
+      <EntityTypeMapping TypeName="IsTypeOf(Blogging.Person)">
+        <MappingFragment StoreEntitySet="Persons">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Entries">
+      <EntityTypeMapping TypeName="IsTypeOf(Blogging.Entry)">
+        <MappingFragment StoreEntitySet="Entries">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Modified" ColumnName="Modified" />
+          <ScalarProperty Name="Body" ColumnName="Body" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(Blogging.Post)">
+        <MappingFragment StoreEntitySet="Entries_Post">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PermaLink" ColumnName="PermaLink" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(Blogging.Comment)">
+        <MappingFragment StoreEntitySet="Entries_Comment">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Blogs">
+      <EntityTypeMapping TypeName="IsTypeOf(Blogging.Blog)">
+        <MappingFragment StoreEntitySet="Blogs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Url" ColumnName="Url" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="PersonEntry" TypeName="Blogging.PersonEntries" StoreEntitySet="Entries">
+      <EndProperty Name="Person">
+        <ScalarProperty Name="Id" ColumnName="Author_Id" />
+      </EndProperty>
+      <EndProperty Name="Entry">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PersonBlog" TypeName="Blogging.PersonBlogs" StoreEntitySet="Blogs">
+      <EndProperty Name="Person">
+        <ScalarProperty Name="Id" ColumnName="Owner_Id" />
+      </EndProperty>
+      <EndProperty Name="Blog">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="BlogPost" TypeName="Blogging.BlogPosts" StoreEntitySet="Entries_Post">
+      <EndProperty Name="Blog">
+        <ScalarProperty Name="Id" ColumnName="Blog_Id" />
+      </EndProperty>
+      <EndProperty Name="Post">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PostComment" TypeName="Blogging.PostComments" StoreEntitySet="Entries_Comment">
+      <EndProperty Name="Post">
+        <ScalarProperty Name="Id" ColumnName="Post_Id" />
+      </EndProperty>
+      <EndProperty Name="Comment">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
