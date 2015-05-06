@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="FolderElement.cs" />
     <Compile Include="FoldersCollection.cs" />
+    <Compile Include="HelloSettingsProvider.cs" />
     <Compile Include="StartupFoldersConfigSection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
