@@ -10,6 +10,7 @@ namespace HelloSettings
     public class FolderElement : ConfigurationElement
     {
 
+        [SettingsProviderAttribute(typeof(HelloSettingsProvider))]
         [ConfigurationProperty("folderType", DefaultValue = "", IsKey = true, IsRequired = true)]
         public string FolderType
         {
@@ -17,6 +18,7 @@ namespace HelloSettings
             set { base["folderType"] = value; }
         }
 
+        [SettingsProviderAttribute(typeof(HelloSettingsProvider))]
         [ConfigurationProperty("path", DefaultValue = "", IsKey = false, IsRequired = false)]
         public string Path
         {
