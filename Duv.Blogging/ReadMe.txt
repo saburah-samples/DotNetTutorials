@@ -13,3 +13,7 @@ https://msdn.microsoft.com/en-us/data/jj205424
 3. Generating the Database
 4. Reading & Writing Data
 TODO: 5. Dealing with Model Changes
+
+[Duv.Blogging.Desktop]
+Стили и шаблоны элемента Expander
+https://msdn.microsoft.com/ru-ru/library/ms753296(v=vs.110).aspx

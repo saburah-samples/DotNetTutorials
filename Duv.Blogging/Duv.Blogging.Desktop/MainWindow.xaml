@@ -20,6 +20,50 @@
             <Setter Property="Padding" Value="4"/>
         </Style>
 
+        <Style TargetType="{x:Type Expander}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Expander}">
+                        <Border Grid.Row="0"
+                                Background="{TemplateBinding Background}"
+                                Style="{StaticResource BorderStyle}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition x:Name="ContentRow" Height="0" />
+                                </Grid.RowDefinitions>
+                                <Grid x:Name="Header">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ToggleButton OverridesDefaultStyle="True"
+                                                  Template="{StaticResource ExpanderToggleButton}"
+                                                  IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ToggleButton.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                <GradientStop Color="{DynamicResource ControlLightColor}" Offset="0" />
+                                                <GradientStop Color="{DynamicResource ControlMediumColor}" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </ToggleButton.Background>
+                                    </ToggleButton>
+                                    <ContentPresenter x:Name="HeaderHost" Grid.Column="1" Margin="4"
+                                                      ContentSource="Header"
+                                                      RecognizesAccessKey="True" />
+                                </Grid>
+                                <ContentPresenter x:Name="ContentHost" Grid.Row="1" Margin="4" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="True">
+                                <Setter TargetName="ContentRow" Property="Height" Value="{Binding Height, ElementName=ContentHost}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
 
     <Window.DataContext>
@@ -40,30 +84,27 @@
                      SelectedItem="{Binding Path=SelectedBlog}"
                      Grid.Column="0">
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border Background="{StaticResource BlogBackgroundColorBrush}"
-                                TextBlock.Foreground="{StaticResource BlogForegroundColorBrush}"
-                                Style="{StaticResource BorderStyle}">
-                            <StackPanel>
-                                <ContentControl ContentTemplate="{StaticResource BlogDataTemplate}"
-                                                Content="{TemplateBinding Content}"/>
-                                <ItemsControl ItemsSource="{Binding Posts}"
-                                              HorizontalContentAlignment="Stretch"
-                                              Margin="16,0,0,0">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Background="{StaticResource PostBackgroundColorBrush}"
-                                                    TextBlock.Foreground="{StaticResource PostForegroundColorBrush}"
-                                                    Style="{StaticResource BorderStyle}">
-                                                <ContentControl Content="{TemplateBinding Content}"
-                                                                ContentTemplate="{StaticResource PostDataTemplate}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
+                    <ItemContainerTemplate>
+                        <Expander Header="{TemplateBinding Content}"
+                                  HeaderTemplate="{StaticResource BlogDataTemplate}"
+                                  Background="{StaticResource BlogBackgroundColorBrush}"
+                                  TextBlock.Foreground="{StaticResource BlogForegroundColorBrush}">
+                            <ItemsControl ItemsSource="{Binding Posts}"
+                                          HorizontalContentAlignment="Stretch"
+                                          Margin="16,0,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <ItemContainerTemplate>
+                                        <Border Background="{StaticResource PostBackgroundColorBrush}"
+                                                TextBlock.Foreground="{StaticResource PostForegroundColorBrush}"
+                                                Style="{StaticResource BorderStyle}">
+                                            <ContentControl Content="{TemplateBinding Content}"
+                                                            ContentTemplate="{StaticResource PostDataTemplate}"/>
+                                        </Border>
+                                    </ItemContainerTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Expander>
+                    </ItemContainerTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
 
