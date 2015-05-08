@@ -32,7 +32,7 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition x:Name="ContentRow" Height="0" />
                                 </Grid.RowDefinitions>
-                                <Grid x:Name="Header">
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -40,12 +40,6 @@
                                     <ToggleButton OverridesDefaultStyle="True"
                                                   Template="{StaticResource ExpanderToggleButton}"
                                                   IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
-                                        <ToggleButton.Background>
-                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                                <GradientStop Color="{DynamicResource ControlLightColor}" Offset="0" />
-                                                <GradientStop Color="{DynamicResource ControlMediumColor}" Offset="1" />
-                                            </LinearGradientBrush>
-                                        </ToggleButton.Background>
                                     </ToggleButton>
                                     <ContentPresenter x:Name="HeaderHost" Grid.Column="1" Margin="4"
                                                       ContentSource="Header"
