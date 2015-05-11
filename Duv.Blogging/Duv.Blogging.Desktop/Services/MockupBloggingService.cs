@@ -9,6 +9,12 @@ namespace Duv.Blogging.Desktop.Services
 {
     class MockupBloggingService : IBloggingService
     {
+        public async Task<IEnumerable<Blog>> GetBlogsAsync()
+        {
+            await Task.Delay(TimeSpan.FromSeconds(3)).ConfigureAwait(false);
+            return GetBlogs();
+        }
+
         public IEnumerable<Blog> GetBlogs()
         {
             var blogs = new List<Blog>();

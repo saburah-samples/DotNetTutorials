@@ -70,6 +70,12 @@
                     Width="64" Height="64"
                     Margin="8">
             </Button>
+            <Button Content="Refresh" Command="{Binding RefreshBlogsCommand}"
+                    Width="64" Height="64"
+                    Margin="8">
+            </Button>
+            <ProgressBar IsIndeterminate="True" Width="300"
+                         Visibility="{Binding IsInLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Duv.Blogging.Desktop.Infrastructure.Mvvm
 {
-    public abstract class BindableBase: INotifyPropertyChanged
+    public abstract class BindableBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

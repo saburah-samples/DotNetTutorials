@@ -14,16 +14,20 @@ namespace Duv.Blogging.Desktop
     class MainViewModel : BindableBase
     {
         private Blog selectedBlog;
+        private IEnumerable<Blog> blogs;
+        private bool isInLoading;
+
         public MainViewModel()
         {
             Blogs = new ObservableCollection<Blog>();
             FirstBlogCommand = new RelayCommand(SelectFirstBlog, CanSelectFirstBlog);
+            RefreshBlogsCommand = new RelayCommand(RefreshBlogs, CanRefreshBlogs);
             LoadData();
         }
 
         private bool CanSelectFirstBlog(object obj)
         {
-            return Blogs.Count > 0;
+            return IsInLoading == false && Blogs.Count() > 0;
         }
 
         private void SelectFirstBlog(object obj)
@@ -31,19 +35,53 @@ namespace Duv.Blogging.Desktop
             SelectedBlog = Blogs.FirstOrDefault();
         }
 
-        private void LoadData()
+        private bool CanRefreshBlogs(object obj)
         {
-            var service = ServiceLocator.BloggingService;
-            Blogs = new ObservableCollection<Blog>(service.GetBlogs());
-            SelectedBlog = Blogs.FirstOrDefault();
+            return IsInLoading == false;
         }
 
-        public ICollection<Blog> Blogs { get; private set; }
+        private void RefreshBlogs(object obj)
+        {
+            ClearData();
+            LoadData();
+        }
+
+        private void ClearData()
+        {
+            Blogs = new ObservableCollection<Blog>();
+        }
+
+        private async void LoadData()
+        {
+            var service = ServiceLocator.BloggingService;
+
+            IsInLoading = true;
+            var data = await service.GetBlogsAsync();
+            Blogs = new ObservableCollection<Blog>(data);
+            SelectedBlog = Blogs.FirstOrDefault();
+            IsInLoading = false;
+        }
+
+        public IEnumerable<Blog> Blogs
+        {
+            get { return blogs; }
+            private set { SetPropertyAndNotify(ref blogs, value); }
+        }
+
         public Blog SelectedBlog
         {
             get { return selectedBlog; }
             set { SetPropertyAndNotify(ref selectedBlog, value); }
         }
-        public ICommand FirstBlogCommand { get; set; }
+
+        public bool IsInLoading
+        {
+            get { return isInLoading; }
+            set { SetPropertyAndNotify(ref isInLoading, value); }
+        }
+
+        public ICommand FirstBlogCommand { get; private set; }
+
+        public ICommand RefreshBlogsCommand { get; private set; }
     }
 }
