@@ -53,6 +53,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Entry.cs" />
+    <Compile Include="Models\Person.cs" />
     <Compile Include="Services\IBloggingService.cs" />
     <Compile Include="Infrastructure\Mvvm\BindableBase.cs" />
     <Compile Include="Infrastructure\Mvvm\RelayCommand.cs" />
@@ -92,6 +95,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Blogging.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -5,11 +5,12 @@ using System.Text;
 
 namespace Duv.Blogging.Desktop.Models
 {
-    public class Post
+    public class Post : Entry
     {
         public string Title { get; set; }
-        public string Content { get; set; }
+        public string PermaLink { get; set; }
 
         public Blog Blog { get; set; }
+        public IEnumerable<Comment> Comments { get; set; }
     }
 }

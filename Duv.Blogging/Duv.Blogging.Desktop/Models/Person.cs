@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Duv.Blogging.Desktop.Models
 {
-    public class Blog
+    public class Person
     {
         public string Name { get; set; }
-        public string Url { get; set; }
+        public string Email { get; set; }
 
-        public Person Owner { get; set; }
-        public IEnumerable<Post> Posts { get; set; }
+        public IEnumerable<Entry> Entries { get; set; }
+        public IEnumerable<Blog> Blogs { get; set; }
     }
 }

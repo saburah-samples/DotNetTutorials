@@ -20,3 +20,5 @@ https://msdn.microsoft.com/ru-ru/library/ms753296(v=vs.110).aspx
 
 A Style for Round Glassy WPF Buttons
 http://www.codeproject.com/Articles/32257/A-Style-for-Round-Glassy-WPF-Buttons
+
+TODO: Async data loading
