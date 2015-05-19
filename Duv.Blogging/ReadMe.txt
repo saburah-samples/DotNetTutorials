@@ -21,7 +21,9 @@ https://msdn.microsoft.com/ru-ru/library/ms753296(v=vs.110).aspx
 A Style for Round Glassy WPF Buttons
 http://www.codeproject.com/Articles/32257/A-Style-for-Round-Glassy-WPF-Buttons
 
-TODO: Patterns for Asynchronous MVVM Applications: Data Binding
+Patterns for Asynchronous MVVM Applications: Data Binding
 https://msdn.microsoft.com/en-us/magazine/dn605875.aspx
-TODO: Patterns for Asynchronous MVVM Applications: Commands
+Patterns for Asynchronous MVVM Applications: Commands
 https://msdn.microsoft.com/en-us/magazine/dn630647.aspx
+
+DONE: using ServiceAdapter for async command execution

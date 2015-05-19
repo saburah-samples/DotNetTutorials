@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Duv.Blogging.Desktop.Infrastructure.Mvvm;
 using Duv.Blogging.Desktop.Models;
 using Duv.Blogging.Desktop.Services;
+using Duv.Blogging.Desktop.ServiceAdapters;
 
 namespace Duv.Blogging.Desktop
 {
@@ -16,9 +17,12 @@ namespace Duv.Blogging.Desktop
         private Blog selectedBlog;
         private IEnumerable<Blog> blogs;
         private bool isInLoading;
+        private readonly ServiceAdapter<IBloggingService> bloggingServiceAdapter;
 
         public MainViewModel()
         {
+            bloggingServiceAdapter = new ServiceAdapter<IBloggingService>();
+
             Blogs = new ObservableCollection<Blog>();
             FirstBlogCommand = new RelayCommand(SelectFirstBlog, CanSelectFirstBlog);
             RefreshBlogsCommand = new RelayCommand(RefreshBlogs, CanRefreshBlogs);
@@ -53,13 +57,13 @@ namespace Duv.Blogging.Desktop
 
         private async void LoadData()
         {
-            var service = ServiceLocator.BloggingService;
-
             IsInLoading = true;
-            var data = await service.GetBlogsAsync();
+            var data = await bloggingServiceAdapter.Execute(s => s.GetBlogs());
+
             Blogs = new ObservableCollection<Blog>(data);
             SelectedBlog = Blogs.FirstOrDefault();
             IsInLoading = false;
+            CommandManager.InvalidateRequerySuggested();
         }
 
         public IEnumerable<Blog> Blogs

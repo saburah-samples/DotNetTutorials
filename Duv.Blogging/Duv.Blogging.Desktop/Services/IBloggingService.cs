@@ -10,6 +10,5 @@ namespace Duv.Blogging.Desktop.Services
     public interface IBloggingService
     {
         IEnumerable<Blog> GetBlogs();
-        Task<IEnumerable<Blog>> GetBlogsAsync();
     }
 }

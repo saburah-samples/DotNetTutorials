@@ -57,6 +57,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Entry.cs" />
     <Compile Include="Models\Person.cs" />
+    <Compile Include="ServiceAdapters\ServiceAdapter.cs" />
     <Compile Include="Services\IBloggingService.cs" />
     <Compile Include="Infrastructure\Mvvm\BindableBase.cs" />
     <Compile Include="Infrastructure\Mvvm\RelayCommand.cs" />
@@ -78,7 +79,7 @@
     <Compile Include="Models\Blog.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Services\MockupBloggingService.cs" />
-    <Compile Include="Services\ServiceLocator.cs" />
+    <Compile Include="ServiceAdapters\ServiceLocator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
