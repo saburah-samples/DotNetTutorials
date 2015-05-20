@@ -10,15 +10,13 @@ namespace Duv.Blogging.Desktop.ServiceAdapters
     {
         public Task<TResult> Execute<TResult>(Func<TService, TResult> command)
         {
-            var task = new Task<TResult>(() => DispatchCommand(command));
+            var task = new Task<TResult>(() =>
+            {
+                var service = ServiceLocator.GetService<TService>();
+                return command.Invoke(service);
+            });
             task.Start();
             return task;
-        }
-
-        private TResult DispatchCommand<TResult>(Func<TService, TResult> command)
-        {
-            var service = ServiceLocator.GetService<TService>();
-            return command.Invoke(service);
         }
     }
 }
