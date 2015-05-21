@@ -77,6 +77,9 @@
             <ProgressBar IsIndeterminate="True" Width="300"
                          Visibility="{Binding IsInLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         </StackPanel>
+        <StackPanel DockPanel.Dock="Top" Margin="8">
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red"/>
+        </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

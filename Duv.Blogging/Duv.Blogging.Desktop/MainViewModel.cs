@@ -18,6 +18,7 @@ namespace Duv.Blogging.Desktop
         private IEnumerable<Blog> blogs;
         private bool isInLoading;
         private readonly ServiceAdapter<IBloggingService> bloggingServiceAdapter;
+        private string errorMessage;
 
         public MainViewModel()
         {
@@ -53,17 +54,28 @@ namespace Duv.Blogging.Desktop
         private void ClearData()
         {
             Blogs = new ObservableCollection<Blog>();
+            SelectedBlog = null;
         }
 
         private async void LoadData()
         {
             IsInLoading = true;
-            var data = await bloggingServiceAdapter.Execute(s => s.GetBlogs());
-
-            Blogs = new ObservableCollection<Blog>(data);
-            SelectedBlog = Blogs.FirstOrDefault();
-            IsInLoading = false;
-            CommandManager.InvalidateRequerySuggested();
+            try
+            {
+                var data = await bloggingServiceAdapter.Execute(s => s.GetBlogs());
+                Blogs = new ObservableCollection<Blog>(data);
+                SelectedBlog = Blogs.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                ClearData();
+            }
+            finally
+            {
+                IsInLoading = false;
+                CommandManager.InvalidateRequerySuggested();
+            }
         }
 
         public IEnumerable<Blog> Blogs
@@ -82,6 +94,12 @@ namespace Duv.Blogging.Desktop
         {
             get { return isInLoading; }
             set { SetPropertyAndNotify(ref isInLoading, value); }
+        }
+
+        public string ErrorMessage
+        {
+            get { return errorMessage; }
+            set { SetPropertyAndNotify(ref errorMessage, value); }
         }
 
         public ICommand FirstBlogCommand { get; private set; }
