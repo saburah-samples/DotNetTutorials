@@ -1,0 +1,13 @@
+﻿<Window x:Class="Duv.TaskManager.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <DockPanel>
+        <ContentControl x:Name="HeaderPane" DockPanel.Dock="Top"
+                        Content="HeaderPane"/>
+        <ContentControl x:Name="NavigationPane" DockPanel.Dock="Left"
+                        Content="NavigationPane"/>
+        <ContentControl x:Name="ContentPane"
+                        Content="ContentPane"/>
+    </DockPanel>
+</Window>
