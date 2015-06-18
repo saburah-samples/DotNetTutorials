@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
+# Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "HelloWorld\HelloWorld.csproj", "{93C555C5-86F5-49B2-829B-D6CFE526A45C}"
@@ -27,6 +27,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleApp", "SimpleApp\SimpleApp.csproj", "{C1E8CF43-4440-4DB1-A326-D47F5E906F26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloSettings", "HelloSettings\HelloSettings.csproj", "{DAF4F3ED-EAD7-4EEE-A09E-6ACD49A50747}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloBuild", "HelloBuild\HelloBuild.csproj", "{E9F2AE4E-4E64-492D-84EB-80505CBEAFD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +64,10 @@ Global
 		{DAF4F3ED-EAD7-4EEE-A09E-6ACD49A50747}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAF4F3ED-EAD7-4EEE-A09E-6ACD49A50747}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAF4F3ED-EAD7-4EEE-A09E-6ACD49A50747}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9F2AE4E-4E64-492D-84EB-80505CBEAFD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9F2AE4E-4E64-492D-84EB-80505CBEAFD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9F2AE4E-4E64-492D-84EB-80505CBEAFD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9F2AE4E-4E64-492D-84EB-80505CBEAFD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
