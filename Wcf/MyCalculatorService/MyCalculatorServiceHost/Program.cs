@@ -23,6 +23,7 @@ namespace MyCalculatorServiceHost
 			ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
 			smb.HttpGetEnabled = true;
 			host.Description.Behaviors.Add(smb);
+			host.Description.Behaviors.Find<ServiceDebugBehavior>().IncludeExceptionDetailInFaults = true;
 			//Start the Service
 			host.Open();
 

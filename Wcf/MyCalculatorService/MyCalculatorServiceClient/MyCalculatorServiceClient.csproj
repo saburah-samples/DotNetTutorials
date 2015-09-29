@@ -42,18 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyCalculatorServiceProxy.cs" />
+    <Compile Include="SimpleCalculatorProxy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyCalculatorService\MyCalculatorService.csproj">
-      <Project>{1e4a7243-0302-4bea-87ad-ca76b4c80629}</Project>
-      <Name>MyCalculatorService</Name>
-    </ProjectReference>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <ProjectReference Include="..\MyCalculatorCore\MyCalculatorCore.csproj">
+      <Project>{ae3652c8-1fb2-43ab-9742-6a0041d1e256}</Project>
+      <Name>MyCalculatorCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
