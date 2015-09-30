@@ -46,6 +46,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MyCalculatorCore\MyCalculatorCore.csproj">
+      <Project>{ae3652c8-1fb2-43ab-9742-6a0041d1e256}</Project>
+      <Name>MyCalculatorCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MyCalculatorService\MyCalculatorService.csproj">
       <Project>{1e4a7243-0302-4bea-87ad-ca76b4c80629}</Project>
       <Name>MyCalculatorService</Name>

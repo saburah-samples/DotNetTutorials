@@ -14,11 +14,9 @@ namespace MyCalculatorServiceHost
 			//Create a URI to serve as the base address
 			Uri httpUrl = new Uri("http://localhost:8090/MyService/SimpleCalculator");
 			//Create ServiceHost
-			ServiceHost host
-			= new ServiceHost(typeof(MyCalculatorService.SimpleCalculator), httpUrl);
+			ServiceHost host = new ServiceHost(typeof(MyCalculatorService.SimpleCalculator), httpUrl);
 			//Add a service endpoint
-			host.AddServiceEndpoint(typeof(MyCalculatorService.ISimpleCalculator)
-			, new WSHttpBinding(), "");
+			host.AddServiceEndpoint(typeof(MyCalculatorCore.ISimpleCalculator) , new WSHttpBinding(), "");
 			//Enable metadata exchange
 			ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
 			smb.HttpGetEnabled = true;
