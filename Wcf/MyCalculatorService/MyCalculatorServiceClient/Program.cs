@@ -7,8 +7,6 @@ namespace MyCalculatorServiceClient
 {
     class Program
     {
-        private static SimpleCalculatorProxy proxy;
-
         static void Main(string[] args)
         {
             Trace.Listeners.Add(new ConsoleTraceListener());
