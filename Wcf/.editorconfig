@@ -1,0 +1,30 @@
+[*]
+end_of_line = CRLF
+
+[*.csproj]
+indent_style = space
+indent_size = 2
+
+[*.cs]
+indent_style = tab
+indent_size = 4
+
+[*.config]
+indent_style = tab
+indent_size = 4
+
+[*.xml]
+indent_style = tab
+indent_size = 4
+
+[*.xsd]
+indent_style = tab
+indent_size = 4
+
+[*.xaml]
+indent_style = tab
+indent_size = 4
+
+[*.sql]
+indent_style = tab
+indent_size = 4
