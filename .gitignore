@@ -215,3 +215,4 @@ pip-log.txt
 .mr.developer.cfg
 Duv.Blogging/packages/*
 /Duv.TaskManager/packages/*
+/Wcf/Northwind/packages
