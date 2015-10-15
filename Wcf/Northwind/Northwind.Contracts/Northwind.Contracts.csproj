@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DtoBase.cs" />
     <Compile Include="IContract.cs" />
     <Compile Include="IOrderService.cs" />
     <Compile Include="Order.cs" />

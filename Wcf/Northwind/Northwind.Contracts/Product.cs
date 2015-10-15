@@ -2,8 +2,7 @@
 
 namespace Northwind.Contracts
 {
-	[DataContract]
-	public class Product
+	public class Product : DtoBase
 	{
 		public int ProductID { get; set; }
 		public string ProductName { get; set; }

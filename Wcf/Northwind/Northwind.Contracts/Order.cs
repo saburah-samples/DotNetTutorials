@@ -4,8 +4,7 @@ using System.Runtime.Serialization;
 
 namespace Northwind.Contracts
 {
-	[DataContract]
-	public class Order
+	public class Order : DtoBase
 	{
 		public Order()
 		{
@@ -28,6 +27,7 @@ namespace Northwind.Contracts
 		public string ShipPostalCode { get; set; }
 		public string ShipCountry { get; set; }
 
+		[IgnoreDataMember]
 		public OrderStatus Status
 		{
 			get

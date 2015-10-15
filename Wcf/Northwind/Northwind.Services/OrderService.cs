@@ -25,7 +25,8 @@ namespace Northwind.Services
 
 			Mapper.CreateMap<Data.Order, Order>()
 				.ForMember(d => d.Status, m => m.Ignore())
-				.ForMember(d => d.OrderDetails, m => m.MapFrom(s => s.Order_Details));
+				.ForMember(d => d.OrderDetails, m => m.Ignore());
+				//.ForMember(d => d.OrderDetails, m => m.MapFrom(s => s.Order_Details));
 
 			//Svc -> DB
 
@@ -42,7 +43,8 @@ namespace Northwind.Services
 			using (var context = CreateContext())
 			{
 				var orders = context.Orders.ToArray();
-				return Mapper.Map<IEnumerable<Order>>(orders);
+				var result = Mapper.Map<IEnumerable<Order>>(orders);
+				return result;
 			}
 		}
 
@@ -56,7 +58,10 @@ namespace Northwind.Services
 					throw new InvalidOperationException(string.Format(InvalidOperationOrderNotFound, "GetOrder", orderId));
 				}
 
-				return Mapper.Map<Order>(instance);
+				var orderDetails = instance.Order_Details.ToArray();
+				var result = Mapper.Map<Order>(instance);
+				Mapper.Map(orderDetails, result.OrderDetails);
+				return result;
 			}
 		}
 
