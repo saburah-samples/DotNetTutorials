@@ -41,7 +41,8 @@ namespace Northwind.Services
 		{
 			using (var context = CreateContext())
 			{
-				return context.Orders.Select(e => Mapper.Map<Order>(e)).ToArray();
+				var orders = context.Orders.ToArray();
+				return Mapper.Map<IEnumerable<Order>>(orders);
 			}
 		}
 
