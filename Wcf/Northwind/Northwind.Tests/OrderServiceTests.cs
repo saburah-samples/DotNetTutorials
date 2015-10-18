@@ -32,7 +32,7 @@ namespace Northwind.Tests
 		}
 
 		[TestMethod]
-		public void TestGetOrders_NotEmpty()
+		public void TestGetOrders()
 		{
 			var orders = client.GetOrders();
 			Assert.IsTrue(orders != null, "GetOrders not should return null");
@@ -43,68 +43,29 @@ namespace Northwind.Tests
 		}
 
 		[TestMethod]
-		public void TestGetOrder_Exists()
-		{
-			var orderId = 10248;
-			var order = client.GetOrder(orderId);
-			Assert.IsTrue(order.OrderID == orderId, "OrderID should be {0}", orderId);
-			Assert.IsTrue(order.OrderDetails != null, "OrderDetails not should be null");
-			Assert.IsTrue(order.OrderDetails.Any(), "OrderDetails not should be empty");
-
-			var orderDetail = order.OrderDetails.FirstOrDefault();
-			Assert.IsTrue(orderDetail.OrderID == order.OrderID, "OrderID should be {0}", order.OrderID);
-			Assert.IsTrue(orderDetail.Product != null, "Product not should be null");
-			Assert.IsTrue(orderDetail.ProductID == orderDetail.Product.ProductID, "ProductID should be equal Product.ProductID");
-			Assert.IsTrue(orderDetail.ProductID > 0, "ProductID should be greater 0");
-		}
-
-		[TestMethod]
-		public void TestGetOrder_NotExists()
+		public void TestGetOrder()
 		{
 			try
 			{
 				var order = client.GetOrder(-1);
-				Assert.IsNull(order);
+				Assert.Fail("GetOrder should throw FaultException when order is not found");
 			}
 			catch (FaultException ex)
 			{
-				Assert.IsNotNull(ex);
+				Assert.IsNotNull(ex, "GetOrder should throw FaultException when order is not found");
 			}
-		}
 
-		[TestMethod]
-		public void TestCreateOrder_InProgress()
-		{
-			try
-			{
-				var order = new Contracts.Order();
-				order.RequiredDate = DateTime.Today.AddDays(14);
-				order.OrderDate = DateTime.Today.AddDays(14);
-				var actual = client.CreateOrder(order);
-				Assert.IsNull(actual, "CreateOrder should return null");
-			}
-			catch (FaultException ex)
-			{
-				Assert.IsNotNull(ex, "CreateOrder should throw FaultException");
-			}
-		}
+			var orderId = 10248;
+			var actual = client.GetOrder(orderId);
+			Assert.IsTrue(actual.OrderID == orderId, "OrderID should be {0}", orderId);
+			Assert.IsTrue(actual.OrderDetails != null, "OrderDetails not should be null");
+			Assert.IsTrue(actual.OrderDetails.Any(), "OrderDetails not should be empty");
 
-		[TestMethod]
-		public void TestCreateOrder_Completed()
-		{
-			try
-			{
-				var order = new Contracts.Order();
-				order.RequiredDate = DateTime.Today.AddDays(14);
-				order.OrderDate = DateTime.Today.AddDays(14);
-				order.ShippedDate = DateTime.Today.AddDays(14);
-				var actual = client.CreateOrder(order);
-				Assert.IsNull(actual, "CreateOrder should return null");
-			}
-			catch (FaultException ex)
-			{
-				Assert.IsNotNull(ex, "CreateOrder should throw FaultException");
-			}
+			var orderDetail = actual.OrderDetails.FirstOrDefault();
+			Assert.IsTrue(orderDetail.OrderID == actual.OrderID, "OrderID should be {0}", actual.OrderID);
+			Assert.IsTrue(orderDetail.Product != null, "Product not should be null");
+			Assert.IsTrue(orderDetail.ProductID == orderDetail.Product.ProductID, "ProductID should be equal Product.ProductID");
+			Assert.IsTrue(orderDetail.ProductID > 0, "ProductID should be greater 0");
 		}
 
 		[TestMethod]
@@ -145,6 +106,41 @@ namespace Northwind.Tests
 		}
 
 		[TestMethod]
+		public void TestCreateOrder_InProgress()
+		{
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.OrderDate = DateTime.Today.AddDays(14);
+				var actual = client.CreateOrder(order);
+				Assert.Fail("CreateOrder should throw FaultException when in progress order is creating");
+			}
+			catch (FaultException ex)
+			{
+				Assert.IsNotNull(ex, "CreateOrder should throw FaultException when in progress order is creating");
+			}
+		}
+
+		[TestMethod]
+		public void TestCreateOrder_Completed()
+		{
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.OrderDate = DateTime.Today.AddDays(14);
+				order.ShippedDate = DateTime.Today.AddDays(14);
+				var actual = client.CreateOrder(order);
+				Assert.Fail("CreateOrder should throw FaultException when completed order is creating");
+			}
+			catch (FaultException ex)
+			{
+				Assert.IsNotNull(ex, "CreateOrder should throw FaultException when completed order is creating");
+			}
+		}
+
+		[TestMethod]
 		public void TestUpdateOrder()
 		{
 			var order = new Contracts.Order();
@@ -158,7 +154,10 @@ namespace Northwind.Tests
 				Quantity = 10,
 				UnitPrice = 15
 			});
+
 			order = client.CreateOrder(order);
+			var orderId = order.OrderID;
+			Assert.IsTrue(order.Status == Contracts.OrderStatus.Draft);
 			Assert.IsTrue(order.OrderDetails.Count == 1);
 
 			var item = new Contracts.OrderDetail()
@@ -172,14 +171,14 @@ namespace Northwind.Tests
 			orderDetails.Add(item);
 			order.OrderDetails = orderDetails;
 			order = client.UpdateOrder(order);
-			Assert.IsTrue(order.OrderDetails.Count == 2);
+			Assert.IsTrue(order.OrderDetails.Count == 2, "Order details should be added");
 
 			orderDetails = new List<OrderDetail>(order.OrderDetails);
 			item = orderDetails.First(e => e.ProductID == item.ProductID);
 			orderDetails.Remove(item);
 			order.OrderDetails = orderDetails;
 			order = client.UpdateOrder(order);
-			Assert.IsTrue(order.OrderDetails.Count == 1);
+			Assert.IsTrue(order.OrderDetails.Count == 1, "Order details should be deleted");
 		}
 
 		[TestMethod]
@@ -230,6 +229,20 @@ namespace Northwind.Tests
 			order = client.ApproveOrder(orderId);
 			Assert.IsTrue(order.Status == Contracts.OrderStatus.InProgress);
 			Assert.IsTrue(order.OrderDate != null);
+
+			try
+			{
+				var actual = client.UpdateOrder(order);
+				Assert.Fail("UpdateOrder should throw FaultException when in progress order is updating");
+			}
+			catch (FaultException ex)
+			{
+				Assert.IsNotNull(ex, "UpdateOrder should throw FaultException when in progress order is updating");
+			}
+
+			client.DeleteOrder(orderId);
+			var orders = client.GetOrders();
+			Assert.IsFalse(orders.Any(e => e.OrderID == orderId), "Approved order should be deleted.");
 		}
 
 		[TestMethod]
@@ -259,6 +272,28 @@ namespace Northwind.Tests
 			order = client.CompleteOrder(orderId);
 			Assert.IsTrue(order.Status == Contracts.OrderStatus.Completed);
 			Assert.IsTrue(order.ShippedDate != null);
+
+			try
+			{
+				var actual = client.UpdateOrder(order);
+				Assert.Fail("UpdateOrder should throw FaultException when completed order is updating");
+			}
+			catch (FaultException ex)
+			{
+				Assert.IsNotNull(ex, "UpdateOrder should throw FaultException when completed order is updating");
+			}
+
+			try
+			{
+				client.DeleteOrder(orderId);
+				Assert.Fail("DeleteOrder should throw FaultException when completed order is deleting");
+			}
+			catch (FaultException ex)
+			{
+				Assert.IsNotNull(ex, "DeleteOrder should throw FaultException when completed order is deleting");
+			}
+			var orders = client.GetOrders();
+			Assert.IsTrue(orders.Any(e => e.OrderID == orderId), "Completed order cannot be deleted");
 		}
 	}
 }
