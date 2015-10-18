@@ -1,4 +1,5 @@
 ﻿using Northwind.Services.Data;
+using System;
 
 namespace Northwind.Services
 {
@@ -7,6 +8,22 @@ namespace Northwind.Services
 		protected NorthwindContext CreateContext()
 		{
 			return new NorthwindContext();
+		}
+
+		protected void Execute(Action<NorthwindContext> command)
+		{
+			using (var context = CreateContext())
+			{
+				command.Invoke(context);
+			}
+		}
+
+		protected TResult Execute<TResult>(Func<NorthwindContext, TResult> command)
+		{
+			using (var context = CreateContext())
+			{
+				return command.Invoke(context);
+			}
 		}
 	}
 }

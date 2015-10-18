@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace Northwind.Contracts
 {
@@ -27,13 +26,12 @@ namespace Northwind.Contracts
 		public string ShipPostalCode { get; set; }
 		public string ShipCountry { get; set; }
 
-		[IgnoreDataMember]
 		public OrderStatus Status
 		{
 			get
 			{
-				if (OrderDate != null) return OrderStatus.InProgress;
 				if (ShippedDate != null) return OrderStatus.Completed;
+				if (OrderDate != null) return OrderStatus.InProgress;
 				return OrderStatus.Draft;
 			}
 		}
