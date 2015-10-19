@@ -22,13 +22,19 @@ namespace SimpleMvvm.Data.Naive
 
 		public List<Customer> GetCustomers()
 		{
-			return customers;
+			return customers.Select(e => new Customer
+			{
+				CustomerID = e.CustomerID,
+				FullName = e.FullName,
+				Phone = e.Phone,
+			}).ToList();
 		}
 
-		public void UpdateCustomer(Customer SelectedCustomer)
+		public void UpdateCustomer(Customer customer)
 		{
-			Customer customerToChange = customers.Single(c => c.CustomerID == SelectedCustomer.CustomerID);
-			customerToChange = SelectedCustomer;
+			Customer customerToChange = customers.Single(c => c.CustomerID == customer.CustomerID);
+			customerToChange.FullName = customer.FullName;
+			customerToChange.Phone = customer.Phone;
 		}
 	}
 }

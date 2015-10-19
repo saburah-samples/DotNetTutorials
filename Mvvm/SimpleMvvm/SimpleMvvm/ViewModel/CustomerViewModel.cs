@@ -24,6 +24,9 @@ namespace SimpleMvvm.ViewModel
 		private void WireCommands()
 		{
 			UpdateCustomerCommand = new RelayCommand(UpdateCustomer);
+			RefreshCustomersCommand = new RelayCommand(RefreshCustomers);
+
+			RefreshCustomersCommand.IsEnabled = true;
 		}
 
 		public RelayCommand UpdateCustomerCommand
@@ -32,10 +35,23 @@ namespace SimpleMvvm.ViewModel
 			private set;
 		}
 
+		public RelayCommand RefreshCustomersCommand
+		{
+			get;
+			private set;
+		}
+
 		public List<Customer> Customers
 		{
 			get { return customers; }
-			set { customers = value; }
+			set
+			{
+				if (customers != value)
+				{
+					customers = value;
+					OnPropertyChanged("Customers");
+				}
+			}
 		}
 
 		public Customer CurrentCustomer
@@ -77,6 +93,16 @@ namespace SimpleMvvm.ViewModel
 		public bool CanUpdateCustomer()
 		{
 			return UpdateCustomerCommand.IsEnabled;
+		}
+
+		public void RefreshCustomers()
+		{
+			Customers = repository.GetCustomers();
+		}
+
+		public bool CanRefreshCustomers()
+		{
+			return RefreshCustomersCommand.IsEnabled;
 		}
 	}
 }

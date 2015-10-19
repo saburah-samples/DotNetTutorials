@@ -29,6 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			this.buttonRefreshCustomers = new System.Windows.Forms.Button();
 			this.buttonUpdateCustomer = new System.Windows.Forms.Button();
 			this.comboBoxCurrentCustomer = new System.Windows.Forms.ComboBox();
 			this.textBoxCustomerID = new System.Windows.Forms.TextBox();
@@ -41,9 +42,18 @@
 			((System.ComponentModel.ISupportInitialize)(this.customerBindingSource)).BeginInit();
 			this.SuspendLayout();
 			// 
-			// button1
+			// buttonRefreshCustomers
 			// 
-			this.buttonUpdateCustomer.Location = new System.Drawing.Point(12, 121);
+			this.buttonRefreshCustomers.Location = new System.Drawing.Point(12, 12);
+			this.buttonRefreshCustomers.Name = "buttonRefreshCustomers";
+			this.buttonRefreshCustomers.Size = new System.Drawing.Size(260, 23);
+			this.buttonRefreshCustomers.TabIndex = 8;
+			this.buttonRefreshCustomers.Text = "Refresh Customers";
+			this.buttonRefreshCustomers.UseVisualStyleBackColor = true;
+			// 
+			// buttonUpdateCustomer
+			// 
+			this.buttonUpdateCustomer.Location = new System.Drawing.Point(12, 148);
 			this.buttonUpdateCustomer.Name = "buttonUpdateCustomer";
 			this.buttonUpdateCustomer.Size = new System.Drawing.Size(260, 23);
 			this.buttonUpdateCustomer.TabIndex = 0;
@@ -53,28 +63,28 @@
 			// comboBoxCurrentCustomer
 			// 
 			this.comboBoxCurrentCustomer.FormattingEnabled = true;
-			this.comboBoxCurrentCustomer.Location = new System.Drawing.Point(13, 13);
+			this.comboBoxCurrentCustomer.Location = new System.Drawing.Point(12, 41);
 			this.comboBoxCurrentCustomer.Name = "comboBoxCurrentCustomer";
-			this.comboBoxCurrentCustomer.Size = new System.Drawing.Size(259, 21);
+			this.comboBoxCurrentCustomer.Size = new System.Drawing.Size(260, 21);
 			this.comboBoxCurrentCustomer.TabIndex = 1;
 			// 
 			// textBoxCustomerID
 			// 
-			this.textBoxCustomerID.Location = new System.Drawing.Point(59, 41);
+			this.textBoxCustomerID.Location = new System.Drawing.Point(59, 68);
 			this.textBoxCustomerID.Name = "textBoxCustomerID";
 			this.textBoxCustomerID.Size = new System.Drawing.Size(213, 20);
 			this.textBoxCustomerID.TabIndex = 2;
 			// 
 			// textBoxCustomerName
 			// 
-			this.textBoxCustomerName.Location = new System.Drawing.Point(59, 68);
+			this.textBoxCustomerName.Location = new System.Drawing.Point(59, 95);
 			this.textBoxCustomerName.Name = "textBoxCustomerName";
 			this.textBoxCustomerName.Size = new System.Drawing.Size(213, 20);
 			this.textBoxCustomerName.TabIndex = 3;
 			// 
 			// textBoxCustomerPhone
 			// 
-			this.textBoxCustomerPhone.Location = new System.Drawing.Point(59, 95);
+			this.textBoxCustomerPhone.Location = new System.Drawing.Point(59, 122);
 			this.textBoxCustomerPhone.Name = "textBoxCustomerPhone";
 			this.textBoxCustomerPhone.Size = new System.Drawing.Size(213, 20);
 			this.textBoxCustomerPhone.TabIndex = 4;
@@ -82,7 +92,7 @@
 			// labelCustomerID
 			// 
 			this.labelCustomerID.AutoSize = true;
-			this.labelCustomerID.Location = new System.Drawing.Point(12, 44);
+			this.labelCustomerID.Location = new System.Drawing.Point(12, 71);
 			this.labelCustomerID.Name = "labelCustomerID";
 			this.labelCustomerID.Size = new System.Drawing.Size(18, 13);
 			this.labelCustomerID.TabIndex = 5;
@@ -91,7 +101,7 @@
 			// labelCustomerName
 			// 
 			this.labelCustomerName.AutoSize = true;
-			this.labelCustomerName.Location = new System.Drawing.Point(12, 71);
+			this.labelCustomerName.Location = new System.Drawing.Point(12, 98);
 			this.labelCustomerName.Name = "labelCustomerName";
 			this.labelCustomerName.Size = new System.Drawing.Size(35, 13);
 			this.labelCustomerName.TabIndex = 6;
@@ -100,7 +110,7 @@
 			// labelCustomerPhone
 			// 
 			this.labelCustomerPhone.AutoSize = true;
-			this.labelCustomerPhone.Location = new System.Drawing.Point(12, 98);
+			this.labelCustomerPhone.Location = new System.Drawing.Point(12, 125);
 			this.labelCustomerPhone.Name = "labelCustomerPhone";
 			this.labelCustomerPhone.Size = new System.Drawing.Size(38, 13);
 			this.labelCustomerPhone.TabIndex = 7;
@@ -114,7 +124,8 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(284, 159);
+			this.ClientSize = new System.Drawing.Size(284, 182);
+			this.Controls.Add(this.buttonRefreshCustomers);
 			this.Controls.Add(this.labelCustomerPhone);
 			this.Controls.Add(this.labelCustomerName);
 			this.Controls.Add(this.labelCustomerID);
@@ -133,6 +144,7 @@
 
 		#endregion
 
+		private System.Windows.Forms.Button buttonRefreshCustomers;
 		private System.Windows.Forms.Button buttonUpdateCustomer;
 		private System.Windows.Forms.ComboBox comboBoxCurrentCustomer;
 		private System.Windows.Forms.TextBox textBoxCustomerID;

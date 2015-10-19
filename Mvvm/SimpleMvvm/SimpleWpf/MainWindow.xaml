@@ -35,5 +35,9 @@
 			Command="{Binding UpdateCustomerCommand}"
 			Content="Update" Height="23" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="4" 
 			Name="UpdateButton" VerticalAlignment="Top" Width="75" />
+		<Button
+			Command="{Binding RefreshCustomersCommand}"
+			Content="Refresh" Height="23" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" 
+			Name="RefreshButton" VerticalAlignment="Top" Width="75" />
 	</Grid>
 </Window>
