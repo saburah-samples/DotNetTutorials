@@ -1,5 +1,6 @@
 ﻿using Northwind.Services.Data;
 using System;
+using System.ServiceModel;
 
 namespace Northwind.Services
 {
@@ -12,17 +13,39 @@ namespace Northwind.Services
 
 		protected void Execute(Action<NorthwindContext> command)
 		{
-			using (var context = CreateContext())
+			try
 			{
-				command.Invoke(context);
+				using (var context = CreateContext())
+				{
+					command.Invoke(context);
+				}
+			}
+			catch (FaultException ex)
+			{
+				throw ex;
+			}
+			catch (Exception ex)
+			{
+				throw new FaultException(ex.Message, new FaultCode(ex.GetType().Name));
 			}
 		}
 
 		protected TResult Execute<TResult>(Func<NorthwindContext, TResult> command)
 		{
-			using (var context = CreateContext())
+			try
 			{
-				return command.Invoke(context);
+				using (var context = CreateContext())
+				{
+					return command.Invoke(context);
+				}
+			}
+			catch (FaultException ex)
+			{
+				throw ex;
+			}
+			catch (Exception ex)
+			{
+				throw new FaultException(ex.Message, new FaultCode(ex.GetType().Name));
 			}
 		}
 	}

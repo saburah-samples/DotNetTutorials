@@ -3,6 +3,7 @@ using Northwind.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 
 namespace Northwind.Services
 {
@@ -96,7 +97,7 @@ namespace Northwind.Services
 			if (instance == null)
 			{
 				var message = string.Format(ErrorOrderNotFound, orderId);
-				throw new InvalidOperationException(message);
+				throw new FaultException<OrderNotFoundFault>(new OrderNotFoundFault { OrderID = orderId }, message, new FaultCode("GetOrder"));
 			}
 
 			var orderDetails = instance.Order_Details.ToArray();
@@ -114,7 +115,7 @@ namespace Northwind.Services
 			if (order.Status != OrderStatus.Draft)
 			{
 				var message = string.Format(ErrorInvalidOrderStatusForCreate, order.Status);
-				throw new InvalidOperationException(message);
+				throw new FaultException<InvalidOrderStatusFault>(new InvalidOrderStatusFault { OrderID = order.OrderID, Status = order.Status }, message, new FaultCode("CreateOrder"));
 			}
 
 			var instance = context.Orders.Create();
@@ -141,7 +142,7 @@ namespace Northwind.Services
 			if (order.Status != OrderStatus.Draft)
 			{
 				var message = string.Format(ErrorInvalidOrderStatusForUpdate, order.Status);
-				throw new InvalidOperationException(message);
+				throw new FaultException<InvalidOrderStatusFault>(new InvalidOrderStatusFault { OrderID = order.OrderID, Status = order.Status }, message, new FaultCode("UpdateOrder"));
 			}
 
 			var orderId = order.OrderID;
@@ -149,13 +150,13 @@ namespace Northwind.Services
 			if (instance == null)
 			{
 				var message = string.Format(ErrorOrderNotFound, orderId);
-				throw new InvalidOperationException(message);
+				throw new FaultException<OrderNotFoundFault>(new OrderNotFoundFault { OrderID = orderId }, message, new FaultCode("UpdateOrder"));
 			}
 			var currentOrder = Mapper.Map<Order>(instance);
 			if (currentOrder.Status != OrderStatus.Draft)
 			{
 				var message = string.Format(ErrorOrderHasInvalidStatusForUpdate, currentOrder.OrderID, currentOrder.Status);
-				throw new InvalidOperationException(message);
+				throw new FaultException<InvalidOrderStatusFault>(new InvalidOrderStatusFault { OrderID = currentOrder.OrderID, Status = currentOrder.Status }, message, new FaultCode("UpdateOrder"));
 			}
 
 			Mapper.Map(order, instance);
@@ -174,13 +175,13 @@ namespace Northwind.Services
 			if (instance == null)
 			{
 				var message = string.Format(ErrorOrderNotFound, orderId);
-				throw new InvalidOperationException(message);
+				throw new FaultException<OrderNotFoundFault>(new OrderNotFoundFault { OrderID = orderId }, message, new FaultCode("DeleteOrder"));
 			}
 			var currentOrder = Mapper.Map<Order>(instance);
 			if (currentOrder.Status == OrderStatus.Completed)
 			{
 				var message = string.Format(ErrorOrderHasInvalidStatusForDelete, currentOrder.OrderID, currentOrder.Status);
-				throw new InvalidOperationException(message);
+				throw new FaultException<InvalidOrderStatusFault>(new InvalidOrderStatusFault { OrderID = currentOrder.OrderID, Status = currentOrder.Status }, message, new FaultCode("DeleteOrder"));
 			}
 
 			instance.Order_Details.Clear();
@@ -194,18 +195,18 @@ namespace Northwind.Services
 			if (instance == null)
 			{
 				var message = string.Format(ErrorOrderNotFound, orderId);
-				throw new InvalidOperationException(message);
+				throw new FaultException<OrderNotFoundFault>(new OrderNotFoundFault { OrderID = orderId }, message, new FaultCode("ApproveOrder"));
 			}
 			var currentOrder = Mapper.Map<Order>(instance);
 			if (currentOrder.Status != OrderStatus.Draft)
 			{
 				var message = string.Format(ErrorOrderHasInvalidStatusForApprove, currentOrder.OrderID, currentOrder.Status);
-				throw new InvalidOperationException(message);
+				throw new FaultException<InvalidOrderStatusFault>(new InvalidOrderStatusFault { OrderID = currentOrder.OrderID, Status = currentOrder.Status }, message, new FaultCode("ApproveOrder"));
 			}
 			if (currentOrder.RequiredDate < DateTime.Today)
 			{
 				var message = string.Format(ErrorOrderHasExpiredOn, currentOrder.OrderID, currentOrder.RequiredDate);
-				throw new InvalidOperationException(message);
+				throw new FaultException<OrderHasExpiredFault>(new OrderHasExpiredFault { OrderID = currentOrder.OrderID, RequiredDate = currentOrder.RequiredDate }, message, new FaultCode("ApproveOrder"));
 			}
 
 			instance.OrderDate = DateTime.Today;
@@ -218,13 +219,13 @@ namespace Northwind.Services
 			if (instance == null)
 			{
 				var message = string.Format(ErrorOrderNotFound, orderId);
-				throw new InvalidOperationException(message);
+				throw new FaultException<OrderNotFoundFault>(new OrderNotFoundFault { OrderID = orderId }, message, new FaultCode("CompleteOrder"));
 			}
 			var currentOrder = Mapper.Map<Order>(instance);
 			if (currentOrder.Status != OrderStatus.InProgress)
 			{
 				var message = string.Format(ErrorOrderHasInvalidStatusForComplete, currentOrder.OrderID, currentOrder.Status);
-				throw new InvalidOperationException(message);
+				throw new FaultException<InvalidOrderStatusFault>(new InvalidOrderStatusFault { OrderID = currentOrder.OrderID, Status = currentOrder.Status }, message, new FaultCode("CompleteOrder"));
 			}
 
 			instance.ShippedDate = DateTime.Today;

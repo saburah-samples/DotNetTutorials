@@ -45,16 +45,6 @@ namespace Northwind.Tests
 		[TestMethod]
 		public void TestGetOrder()
 		{
-			try
-			{
-				var order = client.GetOrder(-1);
-				Assert.Fail("GetOrder should throw FaultException when order is not found");
-			}
-			catch (FaultException ex)
-			{
-				Assert.IsNotNull(ex, "GetOrder should throw FaultException when order is not found");
-			}
-
 			var orderId = 10248;
 			var actual = client.GetOrder(orderId);
 			Assert.IsTrue(actual.OrderID == orderId, "OrderID should be {0}", orderId);
@@ -69,7 +59,7 @@ namespace Northwind.Tests
 		}
 
 		[TestMethod]
-		public void TestCreateOrder_Draft()
+		public void TestCreateOrder()
 		{
 			var order = new Contracts.Order();
 			order.RequiredDate = DateTime.Today.AddDays(14);
@@ -103,41 +93,6 @@ namespace Northwind.Tests
 			Assert.AreEqual(1, orderDetail.ProductID, "ProductID should be {0}", 1);
 			Assert.AreEqual(10, orderDetail.Quantity, "Quantity should be {0}", 10);
 			Assert.AreEqual(15, orderDetail.UnitPrice, "UnitPrice should be {0}", 15);
-		}
-
-		[TestMethod]
-		public void TestCreateOrder_InProgress()
-		{
-			try
-			{
-				var order = new Contracts.Order();
-				order.RequiredDate = DateTime.Today.AddDays(14);
-				order.OrderDate = DateTime.Today.AddDays(14);
-				var actual = client.CreateOrder(order);
-				Assert.Fail("CreateOrder should throw FaultException when in progress order is creating");
-			}
-			catch (FaultException ex)
-			{
-				Assert.IsNotNull(ex, "CreateOrder should throw FaultException when in progress order is creating");
-			}
-		}
-
-		[TestMethod]
-		public void TestCreateOrder_Completed()
-		{
-			try
-			{
-				var order = new Contracts.Order();
-				order.RequiredDate = DateTime.Today.AddDays(14);
-				order.OrderDate = DateTime.Today.AddDays(14);
-				order.ShippedDate = DateTime.Today.AddDays(14);
-				var actual = client.CreateOrder(order);
-				Assert.Fail("CreateOrder should throw FaultException when completed order is creating");
-			}
-			catch (FaultException ex)
-			{
-				Assert.IsNotNull(ex, "CreateOrder should throw FaultException when completed order is creating");
-			}
 		}
 
 		[TestMethod]
@@ -294,6 +249,415 @@ namespace Northwind.Tests
 			}
 			var orders = client.GetOrders();
 			Assert.IsTrue(orders.Any(e => e.OrderID == orderId), "Completed order cannot be deleted");
+		}
+
+		[TestMethod]
+		public void TestGetOrder_NotFoundFault()
+		{
+			try
+			{
+				var order = client.GetOrder(-1);
+				Assert.Fail("GetOrder should throw FaultException<OrderNotFoundFault> when order is not found");
+			}
+			catch (FaultException<OrderNotFoundFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("GetOrder should throw FaultException<OrderNotFoundFault> when order is not found");
+			}
+		}
+
+		[TestMethod]
+		public void TestUpdateOrder_NotFoundFault()
+		{
+			try
+			{
+				var order = new Contracts.Order() { OrderID = -1 };
+				order = client.UpdateOrder(order);
+				Assert.Fail("UpdateOrder should throw FaultException<OrderNotFoundFault> when order is not found");
+			}
+			catch (FaultException<OrderNotFoundFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("UpdateOrder should throw FaultException<OrderNotFoundFault> when order is not found");
+			}
+		}
+
+		[TestMethod]
+		public void TestDeleteOrder_NotFoundFault()
+		{
+			try
+			{
+				client.DeleteOrder(-1);
+				Assert.Fail("DeleteOrder should throw FaultException<OrderNotFoundFault> when order is not found");
+			}
+			catch (FaultException<OrderNotFoundFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("DeleteOrder should throw FaultException<OrderNotFoundFault> when order is not found");
+			}
+		}
+
+		[TestMethod]
+		public void TestApproveOrder_NotFoundFault()
+		{
+			try
+			{
+				var order = client.ApproveOrder(-1);
+				Assert.Fail("ApproveOrder should throw FaultException<OrderNotFoundFault> when order is not found");
+			}
+			catch (FaultException<OrderNotFoundFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("ApproveOrder should throw FaultException<OrderNotFoundFault> when order is not found");
+			}
+		}
+
+		[TestMethod]
+		public void TestCompleteOrder_NotFoundFault()
+		{
+			try
+			{
+				var order = client.CompleteOrder(-1);
+				Assert.Fail("CompleteOrder should throw FaultException<OrderNotFoundFault> when order is not found");
+			}
+			catch (FaultException<OrderNotFoundFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("CompleteOrder should throw FaultException<OrderNotFoundFault> when order is not found");
+			}
+		}
+
+		[TestMethod]
+		public void TestCreateOrder_InvalidStatusFault()
+		{
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.OrderDate = DateTime.Today.AddDays(14);
+				var actual = client.CreateOrder(order);
+				Assert.Fail("CreateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("CreateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.OrderDate = DateTime.Today.AddDays(14);
+				order.ShippedDate = DateTime.Today.AddDays(14);
+				var actual = client.CreateOrder(order);
+				Assert.Fail("CreateOrder should throw FaultException when completed order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("CreateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+		}
+
+		[TestMethod]
+		public void TestUpdateOrder_InvalidStatusFault()
+		{
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.CustomerID = "VINET";
+				order.EmployeeID = 5;
+				order.ShipCountry = "RU";
+				order.OrderDetails.Add(new Contracts.OrderDetail()
+				{
+					ProductID = 1,
+					Quantity = 10,
+					UnitPrice = 15
+				});
+				order = client.CreateOrder(order);
+
+				order.OrderDate = DateTime.Today.AddDays(14);
+				var actual = client.UpdateOrder(order);
+				Assert.Fail("UpdateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("UpdateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.CustomerID = "VINET";
+				order.EmployeeID = 5;
+				order.ShipCountry = "RU";
+				order.OrderDetails.Add(new Contracts.OrderDetail()
+				{
+					ProductID = 1,
+					Quantity = 10,
+					UnitPrice = 15
+				});
+				order = client.CreateOrder(order);
+
+				order.ShippedDate = DateTime.Today.AddDays(14);
+				var actual = client.UpdateOrder(order);
+				Assert.Fail("UpdateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("UpdateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.CustomerID = "VINET";
+				order.EmployeeID = 5;
+				order.ShipCountry = "RU";
+				order.OrderDetails.Add(new Contracts.OrderDetail()
+				{
+					ProductID = 1,
+					Quantity = 10,
+					UnitPrice = 15
+				});
+				order = client.CreateOrder(order);
+
+				order.OrderDate = DateTime.Today.AddDays(14);
+				order.ShippedDate = DateTime.Today.AddDays(14);
+				var actual = client.UpdateOrder(order);
+				Assert.Fail("UpdateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("UpdateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.CustomerID = "VINET";
+				order.EmployeeID = 5;
+				order.ShipCountry = "RU";
+				order.OrderDetails.Add(new Contracts.OrderDetail()
+				{
+					ProductID = 1,
+					Quantity = 10,
+					UnitPrice = 15
+				});
+				order = client.CreateOrder(order);
+				order = client.ApproveOrder(order.OrderID);
+
+				order.ShipCountry = "US";
+				var actual = client.UpdateOrder(order);
+				Assert.Fail("UpdateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("UpdateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.CustomerID = "VINET";
+				order.EmployeeID = 5;
+				order.ShipCountry = "RU";
+				order.OrderDetails.Add(new Contracts.OrderDetail()
+				{
+					ProductID = 1,
+					Quantity = 10,
+					UnitPrice = 15
+				});
+				order = client.CreateOrder(order);
+				order = client.ApproveOrder(order.OrderID);
+				order = client.CompleteOrder(order.OrderID);
+
+				order.ShipCountry = "US";
+				var actual = client.UpdateOrder(order);
+				Assert.Fail("UpdateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("UpdateOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+		}
+
+		[TestMethod]
+		public void TestDeleteOrder_InvalidStatusFault()
+		{
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.CustomerID = "VINET";
+				order.EmployeeID = 5;
+				order.ShipCountry = "RU";
+				order.OrderDetails.Add(new Contracts.OrderDetail()
+				{
+					ProductID = 1,
+					Quantity = 10,
+					UnitPrice = 15
+				});
+				order = client.CreateOrder(order);
+				order = client.ApproveOrder(order.OrderID);
+				order = client.CompleteOrder(order.OrderID);
+
+				client.DeleteOrder(order.OrderID);
+				Assert.Fail("DeleteOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("DeleteOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+		}
+
+		[TestMethod]
+		public void TestApproveOrder_InvalidStatusFault()
+		{
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.CustomerID = "VINET";
+				order.EmployeeID = 5;
+				order.ShipCountry = "RU";
+				order.OrderDetails.Add(new Contracts.OrderDetail()
+				{
+					ProductID = 1,
+					Quantity = 10,
+					UnitPrice = 15
+				});
+				order = client.CreateOrder(order);
+				order = client.ApproveOrder(order.OrderID);
+
+				order = client.ApproveOrder(order.OrderID);
+				Assert.Fail("ApproveOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("ApproveOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.CustomerID = "VINET";
+				order.EmployeeID = 5;
+				order.ShipCountry = "RU";
+				order.OrderDetails.Add(new Contracts.OrderDetail()
+				{
+					ProductID = 1,
+					Quantity = 10,
+					UnitPrice = 15
+				});
+				order = client.CreateOrder(order);
+				order = client.ApproveOrder(order.OrderID);
+				order = client.CompleteOrder(order.OrderID);
+
+				order = client.ApproveOrder(order.OrderID);
+				Assert.Fail("ApproveOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("ApproveOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+		}
+
+		[TestMethod]
+		public void TestCompleteOrder_InvalidStatusFault()
+		{
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.CustomerID = "VINET";
+				order.EmployeeID = 5;
+				order.ShipCountry = "RU";
+				order.OrderDetails.Add(new Contracts.OrderDetail()
+				{
+					ProductID = 1,
+					Quantity = 10,
+					UnitPrice = 15
+				});
+				order = client.CreateOrder(order);
+
+				order = client.CompleteOrder(order.OrderID);
+				Assert.Fail("CompleteOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("CompleteOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(14);
+				order.CustomerID = "VINET";
+				order.EmployeeID = 5;
+				order.ShipCountry = "RU";
+				order.OrderDetails.Add(new Contracts.OrderDetail()
+				{
+					ProductID = 1,
+					Quantity = 10,
+					UnitPrice = 15
+				});
+				order = client.CreateOrder(order);
+				order = client.ApproveOrder(order.OrderID);
+				order = client.CompleteOrder(order.OrderID);
+
+				order = client.CompleteOrder(order.OrderID);
+				Assert.Fail("CompleteOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+			catch (FaultException<InvalidOrderStatusFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("CompleteOrder should throw FaultException<InvalidOrderStatusFault> when in progress order is creating");
+			}
+		}
+
+		[TestMethod]
+		public void TestApproveOrder_ExpiredFault()
+		{
+			try
+			{
+				var order = new Contracts.Order();
+				order.RequiredDate = DateTime.Today.AddDays(-1);
+				order.CustomerID = "VINET";
+				order.EmployeeID = 5;
+				order.ShipCountry = "RU";
+				order.OrderDetails.Add(new Contracts.OrderDetail()
+				{
+					ProductID = 1,
+					Quantity = 10,
+					UnitPrice = 15
+				});
+				order = client.CreateOrder(order);
+
+				order = client.ApproveOrder(order.OrderID);
+				Assert.Fail("DeleteOrder should throw FaultException<OrderHasExpiredFault>");
+			}
+			catch (FaultException<OrderHasExpiredFault>) { }
+			catch (Exception)
+			{
+				Assert.Fail("DeleteOrder should throw FaultException<OrderHasExpiredFault>");
+			}
 		}
 	}
 }

@@ -43,9 +43,13 @@
   <ItemGroup>
     <Compile Include="DtoBase.cs" />
     <Compile Include="IContract.cs" />
+    <Compile Include="InvalidOrderStatusFault.cs" />
     <Compile Include="IOrderService.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="OrderDetail.cs" />
+    <Compile Include="OrderFault.cs" />
+    <Compile Include="OrderHasExpiredFault.cs" />
+    <Compile Include="OrderNotFoundFault.cs" />
     <Compile Include="OrderStatus.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
