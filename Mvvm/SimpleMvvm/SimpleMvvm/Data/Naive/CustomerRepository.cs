@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SimpleMvvm.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SimpleMvvm.Model
+namespace SimpleMvvm.Data.Naive
 {
-	public class CustomerRepository
+	public class CustomerRepository : ICustomerRepository
 	{
 		private List<Customer> customers;
 

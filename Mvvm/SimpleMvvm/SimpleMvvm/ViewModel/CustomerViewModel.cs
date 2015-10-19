@@ -10,11 +10,11 @@ namespace SimpleMvvm.ViewModel
 	{
 		private List<Customer> customers;
 		private Customer currentCustomer;
-		private CustomerRepository repository;
+		private ICustomerRepository repository;
 
 		public CustomerViewModel()
 		{
-			repository = new CustomerRepository();
+			repository = ModelContext.Default.CustomerRepository;
 			customers = repository.GetCustomers();
 
 			WireCommands();
@@ -58,6 +58,11 @@ namespace SimpleMvvm.ViewModel
 		public void UpdateCustomer()
 		{
 			repository.UpdateCustomer(CurrentCustomer);
+		}
+
+		public bool CanUpdateCustomer()
+		{
+			return UpdateCustomerCommand.IsEnabled;
 		}
 	}
 }
