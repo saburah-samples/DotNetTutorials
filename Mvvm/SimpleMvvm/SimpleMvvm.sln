@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWpf", "SimpleWpf\SimpleWpf.csproj", "{8B82D001-F188-4FC4-893E-9AAC2DE1C03D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleForms", "SimpleForms\SimpleForms.csproj", "{AC600F15-70FC-4DDD-A731-4998CB9E0229}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{8B82D001-F188-4FC4-893E-9AAC2DE1C03D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B82D001-F188-4FC4-893E-9AAC2DE1C03D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B82D001-F188-4FC4-893E-9AAC2DE1C03D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC600F15-70FC-4DDD-A731-4998CB9E0229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC600F15-70FC-4DDD-A731-4998CB9E0229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC600F15-70FC-4DDD-A731-4998CB9E0229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC600F15-70FC-4DDD-A731-4998CB9E0229}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

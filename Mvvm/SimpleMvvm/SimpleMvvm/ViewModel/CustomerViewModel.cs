@@ -10,6 +10,7 @@ namespace SimpleMvvm.ViewModel
 	{
 		private List<Customer> customers;
 		private Customer currentCustomer;
+		private Customer originCustomer;
 		private ICustomerRepository repository;
 
 		public CustomerViewModel()
@@ -48,9 +49,22 @@ namespace SimpleMvvm.ViewModel
 			{
 				if (currentCustomer != value)
 				{
+					if (value == null)
+					{
+						originCustomer = null;
+					}
+					else
+					{
+						originCustomer = new Customer
+						{
+							CustomerID = value.CustomerID,
+							FullName = value.FullName,
+							Phone = value.Phone
+						};
+					}
 					currentCustomer = value;
-					OnPropertyChanged("CurrentCustomer");
 					UpdateCustomerCommand.IsEnabled = true;
+					OnPropertyChanged("CurrentCustomer");
 				}
 			}
 		}
