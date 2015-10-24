@@ -7,12 +7,59 @@ namespace Northwind.Clients
 {
 	public class ServiceAdapter<TService> where TService : class, IContract
 	{
-		private WcfProxy<TService> proxy;
+		private Func<IWcfProxy<TService>> proxyFactory;
+
+		private IWcfProxy<TService> proxy;
 		private string endpointConfigurationName;
+		private InstanceContext callbackInstance;
 
 		public ServiceAdapter(string endpointConfigurationName)
 		{
 			this.endpointConfigurationName = endpointConfigurationName;
+			this.proxyFactory = CreateProxy;
+		}
+
+		public ServiceAdapter(string endpointConfigurationName, InstanceContext callbackInstance)
+		{
+			this.endpointConfigurationName = endpointConfigurationName;
+			this.callbackInstance = callbackInstance;
+			this.proxyFactory = CreateDuplexProxy;
+		}
+
+		private IWcfProxy<TService> CreateProxy()
+		{
+			return new WcfProxy<TService>(endpointConfigurationName);
+		}
+
+		private IWcfProxy<TService> CreateDuplexProxy()
+		{
+			return new WcfDuplexProxy<TService>(endpointConfigurationName, callbackInstance);
+		}
+
+		public void Open()
+		{
+			proxy = null;
+			GetProxy().Open();
+		}
+
+		public void Close()
+		{
+			if (proxy != null)
+			{
+				try
+				{
+					proxy.Close();
+				}
+				catch (Exception ex)
+				{
+					Trace.WriteLine(ex, this.GetType().FullName);
+					proxy.Abort();
+				}
+				finally
+				{
+					proxy = null;
+				}
+			}
 		}
 
 		public void Execute(Action<TService> command)
@@ -53,17 +100,19 @@ namespace Northwind.Clients
 
 		private bool HandleError(Exception ex)
 		{
-			Trace.WriteLine(ex);
+			Trace.WriteLine(ex, this.GetType().FullName);
 			var handled = false;
 			if (ex is FaultException)
 			{
 				if (proxy.State == CommunicationState.Faulted)
 				{
+					proxy.Abort();
 					proxy = null;
 				}
 			}
 			else if (ex is CommunicationException)
 			{
+				proxy.Abort();
 				proxy = null;
 			}
 			return handled;
@@ -74,20 +123,36 @@ namespace Northwind.Clients
 			return GetProxy().WcfChannel;
 		}
 
-		private WcfProxy<TService> GetProxy()
+		private IWcfProxy<TService> GetProxy()
 		{
 			if (this.proxy == null)
 			{
-				this.proxy = new WcfProxy<TService>(this.endpointConfigurationName);
+				this.proxy = proxyFactory.Invoke();
 			}
 
 			return this.proxy;
 		}
 
-		private class WcfProxy<T> : ClientBase<T> where T : class, IContract
+		private interface IWcfProxy<T> : ICommunicationObject where T : class, IContract
+		{
+			T WcfChannel { get; }
+		}
+
+		private class WcfProxy<T> : ClientBase<T>, IWcfProxy<T> where T : class, IContract
 		{
 			public WcfProxy(string endpointConfigurationName)
 				: base(endpointConfigurationName) { }
+
+			public T WcfChannel
+			{
+				get { return base.Channel; }
+			}
+		}
+
+		private class WcfDuplexProxy<T> : DuplexClientBase<T>, IWcfProxy<T> where T : class, IContract
+		{
+			public WcfDuplexProxy(string endpointConfigurationName, InstanceContext callbackInstance)
+				: base(callbackInstance, endpointConfigurationName) { }
 
 			public T WcfChannel
 			{

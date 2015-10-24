@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OrderServiceClient.cs" />
+    <Compile Include="OrderStatusServiceClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceAdapter.cs" />
   </ItemGroup>
@@ -50,6 +51,9 @@
       <Project>{8d4fa5bd-c4dc-4fd8-ac0a-63aca15cecbe}</Project>
       <Name>Northwind.Contracts</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
