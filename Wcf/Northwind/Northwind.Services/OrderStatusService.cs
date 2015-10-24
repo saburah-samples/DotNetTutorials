@@ -1,6 +1,7 @@
 ﻿using Northwind.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -8,9 +9,22 @@ using System.Timers;
 
 namespace Northwind.Services
 {
+	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
 	public class OrderStatusService : ServiceBase, IOrderStatusService
 	{
 		private List<IOrderStatusCallback> subscribers = new List<IOrderStatusCallback>();
+		private Timer timer;
+
+		public OrderStatusService()
+		{
+			timer = new Timer(1000);
+			timer.Elapsed += (s, e) => NotifySubscribers();
+		}
+
+		~OrderStatusService()
+		{
+			timer.Dispose();
+		}
 
 		public void Subscribe()
 		{
@@ -20,9 +34,7 @@ namespace Northwind.Services
 				RegisterSubscriber(subscriber);
 			}
 
-			var timer = new Timer(1000);
-			timer.Elapsed += Timer_Elapsed;
-			timer.Enabled = true;
+			timer.Enabled = subscribers.Any();
 		}
 
 		public void Unsubscribe()
@@ -32,11 +44,30 @@ namespace Northwind.Services
 			{
 				UnregisterSubscriber(subscriber);
 			}
+
+			timer.Enabled = subscribers.Any();
 		}
 
-		private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+		private void NotifySubscribers()
 		{
-			subscribers.ForEach(s => s.OnOrderStatusChanged(1, OrderStatus.Draft));
+			var inactiveSubscribers = new List<IOrderStatusCallback>();
+			var activeSubscribers = subscribers.ToArray();
+			foreach (var s in activeSubscribers)
+			{
+				try
+				{
+					s.OnOrderStatusChanged(1, OrderStatus.Draft);
+				}
+				catch (Exception ex)
+				{
+					Trace.WriteLine(ex, "Inactive subscriber");
+					inactiveSubscribers.Add(s);
+				}
+			}
+			foreach (var s in inactiveSubscribers)
+			{
+				UnregisterSubscriber(s);
+			}
 		}
 
 		private bool IsSubscriberRegistered(IOrderStatusCallback subscriber)
@@ -47,11 +78,13 @@ namespace Northwind.Services
 		private void RegisterSubscriber(IOrderStatusCallback subscriber)
 		{
 			subscribers.Add(subscriber);
+			Trace.WriteLine("Subscriber is added.");
 		}
 
 		private void UnregisterSubscriber(IOrderStatusCallback subscriber)
 		{
 			subscribers.Remove(subscriber);
+			Trace.WriteLine("Subscriber is removed.");
 		}
 	}
 }

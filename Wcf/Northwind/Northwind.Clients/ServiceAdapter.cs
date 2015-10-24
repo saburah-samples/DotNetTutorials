@@ -8,10 +8,10 @@ namespace Northwind.Clients
 	public class ServiceAdapter<TService> where TService : class, IContract
 	{
 		private Func<IWcfProxy<TService>> proxyFactory;
+		private Func<InstanceContext> callbackFactory;
 
 		private IWcfProxy<TService> proxy;
 		private string endpointConfigurationName;
-		private InstanceContext callbackInstance;
 
 		public ServiceAdapter(string endpointConfigurationName)
 		{
@@ -19,10 +19,10 @@ namespace Northwind.Clients
 			this.proxyFactory = CreateProxy;
 		}
 
-		public ServiceAdapter(string endpointConfigurationName, InstanceContext callbackInstance)
+		public ServiceAdapter(string endpointConfigurationName, Func<InstanceContext> callbackInstanceFactory)
 		{
 			this.endpointConfigurationName = endpointConfigurationName;
-			this.callbackInstance = callbackInstance;
+			this.callbackFactory = callbackInstanceFactory;
 			this.proxyFactory = CreateDuplexProxy;
 		}
 
@@ -33,6 +33,7 @@ namespace Northwind.Clients
 
 		private IWcfProxy<TService> CreateDuplexProxy()
 		{
+			var callbackInstance = callbackFactory.Invoke();
 			return new WcfDuplexProxy<TService>(endpointConfigurationName, callbackInstance);
 		}
 
@@ -129,7 +130,13 @@ namespace Northwind.Clients
 			{
 				this.proxy = proxyFactory.Invoke();
 			}
+			else if (proxy.State != CommunicationState.Created && proxy.State != CommunicationState.Opened)
+			{
+				proxy.Abort();
+				this.proxy = proxyFactory.Invoke();
+			}
 
+			Trace.WriteLine(proxy.State, "CommunicationState");
 			return this.proxy;
 		}
 

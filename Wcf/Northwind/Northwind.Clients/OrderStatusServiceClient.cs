@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
 
 namespace Northwind.Clients
 {
-	public class OrderStatusServiceClient : IOrderStatusService, IOrderStatusCallback, IDisposable
+	public class OrderStatusServiceClient : IOrderStatusService, IOrderStatusCallback
 	{
 		public event OrderStatusChangedEventHandler OrderStatusChanged;
 
@@ -17,12 +18,22 @@ namespace Northwind.Clients
 		public OrderStatusServiceClient()
 		{
 			var endpointConfigurationName = ConfigurationManager.AppSettings.Get(this.GetType().Name);
-			this.adapter = new ServiceAdapter<IOrderStatusService>(endpointConfigurationName, new InstanceContext(this));
+			this.adapter = new ServiceAdapter<IOrderStatusService>(endpointConfigurationName, CreateCallbackInstance);
 		}
 
-		~OrderStatusServiceClient()
+		private InstanceContext CreateCallbackInstance()
 		{
-			Dispose(false);
+			return new InstanceContext(this);
+		}
+
+		public void Open()
+		{
+			adapter.Open();
+		}
+
+		public void Close()
+		{
+			adapter.Close();
 		}
 
 		public void Subscribe()
@@ -39,22 +50,15 @@ namespace Northwind.Clients
 		{
 			if (OrderStatusChanged != null)
 			{
-				OrderStatusChanged(orderId, status);
-			}
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				Unsubscribe();
-				adapter.Close();
+				try
+				{
+					OrderStatusChanged(orderId, status);
+				}
+				catch (Exception ex)
+				{
+					Trace.WriteLine(ex, "Invalid callback handler");
+					throw ex;
+				}
 			}
 		}
 	}
