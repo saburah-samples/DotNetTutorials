@@ -14,7 +14,6 @@ namespace Northwind.Tests
 	public class OrderStatusServiceTests
 	{
 		private static ServiceHost host;
-		private List<string> log;
 
 		[ClassInitialize]
 		public static void StartSvcHost(TestContext context)
@@ -85,16 +84,49 @@ namespace Northwind.Tests
 			client.Unsubscribe();
 		}
 
-		void client_OrderStatusChanged(int orderId, OrderStatus status)
+		[TestMethod]
+		public void Test_LongWorkCallbackHandler()
+		{
+			var client1 = new OrderStatusServiceClient();
+			client1.OrderStatusChanged += client_LongWorkOrderStatusChanged;
+			var client2 = new OrderStatusServiceClient();
+			client2.OrderStatusChanged += client_OrderStatusChanged;
+
+			log.Clear();
+			client1.Subscribe();
+			log2.Clear();
+			client2.Subscribe();
+
+			Thread.Sleep(3 * 1000);
+			Assert.IsTrue(log.Any() && !log2.Any());
+
+			Thread.Sleep(5 * 1000);
+			Assert.IsTrue(log.Any() && log2.Any());
+
+			client1.Unsubscribe();
+			client2.Unsubscribe();
+		}
+
+		private List<string> log;
+		private void client_OrderStatusChanged(int orderId, OrderStatus status)
 		{
 			var message = string.Format("{0} - {1}", orderId, status);
-			Trace.WriteLine(message);
+			Trace.WriteLine("1 "+message);
 			log.Add(message);
 		}
 
-		void client_FailedOrderStatusChanged(int orderId, OrderStatus status)
+		private void client_FailedOrderStatusChanged(int orderId, OrderStatus status)
 		{
 			Assert.IsTrue(false);
+		}
+
+		private List<string> log2 = new List<string>();
+		private void client_LongWorkOrderStatusChanged(int orderId, OrderStatus status)
+		{
+			Thread.Sleep(3 * 1000);
+			var message = string.Format("{0} - {1}", orderId, status);
+			Trace.WriteLine("2 "+message);
+			log2.Add(message);
 		}
 	}
 }
