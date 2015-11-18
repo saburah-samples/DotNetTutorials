@@ -7,34 +7,18 @@ namespace Northwind.Clients
 {
 	public class ServiceAdapter<TService> where TService : class, IContract
 	{
-		private Func<IWcfProxy<TService>> proxyFactory;
-		private Func<InstanceContext> callbackFactory;
-
-		private IWcfProxy<TService> proxy;
-		private string endpointConfigurationName;
+		private ICommunicationObject proxy;
+		private ChannelFactory<TService> channelFactory;
 
 		public ServiceAdapter(string endpointConfigurationName)
 		{
-			this.endpointConfigurationName = endpointConfigurationName;
-			this.proxyFactory = CreateProxy;
+			this.channelFactory = new ChannelFactory<TService>(endpointConfigurationName);
 		}
 
 		public ServiceAdapter(string endpointConfigurationName, Func<InstanceContext> callbackInstanceFactory)
 		{
-			this.endpointConfigurationName = endpointConfigurationName;
-			this.callbackFactory = callbackInstanceFactory;
-			this.proxyFactory = CreateDuplexProxy;
-		}
-
-		private IWcfProxy<TService> CreateProxy()
-		{
-			return new WcfProxy<TService>(endpointConfigurationName);
-		}
-
-		private IWcfProxy<TService> CreateDuplexProxy()
-		{
-			var callbackInstance = callbackFactory.Invoke();
-			return new WcfDuplexProxy<TService>(endpointConfigurationName, callbackInstance);
+			var callbackInstance = callbackInstanceFactory.Invoke();
+			this.channelFactory = new DuplexChannelFactory<TService>(callbackInstance, endpointConfigurationName);
 		}
 
 		public void Open()
@@ -72,10 +56,8 @@ namespace Northwind.Clients
 			}
 			catch (Exception ex)
 			{
-				if (!HandleError(ex))
-				{
-					throw ex;
-				}
+				HandleError(ex);
+				throw ex;
 			}
 		}
 
@@ -88,21 +70,14 @@ namespace Northwind.Clients
 			}
 			catch (Exception ex)
 			{
-				if (!HandleError(ex))
-				{
-					throw ex;
-				}
-				else
-				{
-					return default(TResult);
-				}
+				HandleError(ex);
+				throw ex;
 			}
 		}
 
-		private bool HandleError(Exception ex)
+		private void HandleError(Exception ex)
 		{
 			Trace.WriteLine(ex, this.GetType().FullName);
-			var handled = false;
 			if (ex is FaultException)
 			{
 				if (proxy.State == CommunicationState.Faulted)
@@ -116,55 +91,27 @@ namespace Northwind.Clients
 				proxy.Abort();
 				proxy = null;
 			}
-			return handled;
 		}
 
 		private TService GetService()
 		{
-			return GetProxy().WcfChannel;
+			return (TService)GetProxy();
 		}
 
-		private IWcfProxy<TService> GetProxy()
+		private ICommunicationObject GetProxy()
 		{
 			if (this.proxy == null)
 			{
-				this.proxy = proxyFactory.Invoke();
-			}
+				this.proxy = (ICommunicationObject)channelFactory.CreateChannel();
+            }
 			else if (proxy.State != CommunicationState.Created && proxy.State != CommunicationState.Opened)
 			{
 				proxy.Abort();
-				this.proxy = proxyFactory.Invoke();
+				this.proxy = (ICommunicationObject)channelFactory.CreateChannel();
 			}
 
 			Trace.WriteLine(proxy.State, "CommunicationState");
 			return this.proxy;
-		}
-
-		private interface IWcfProxy<T> : ICommunicationObject where T : class, IContract
-		{
-			T WcfChannel { get; }
-		}
-
-		private class WcfProxy<T> : ClientBase<T>, IWcfProxy<T> where T : class, IContract
-		{
-			public WcfProxy(string endpointConfigurationName)
-				: base(endpointConfigurationName) { }
-
-			public T WcfChannel
-			{
-				get { return base.Channel; }
-			}
-		}
-
-		private class WcfDuplexProxy<T> : DuplexClientBase<T>, IWcfProxy<T> where T : class, IContract
-		{
-			public WcfDuplexProxy(string endpointConfigurationName, InstanceContext callbackInstance)
-				: base(callbackInstance, endpointConfigurationName) { }
-
-			public T WcfChannel
-			{
-				get { return base.Channel; }
-			}
 		}
 	}
 }
