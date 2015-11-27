@@ -14,6 +14,6 @@ namespace Duv.UI.Triggers.ViewModels
 		void AcceptChanges();
 		void CancelChanges();
 
-		TModel CurrentModel { get; set; }
+		TModel CurrentModel { get; }
 	}
 }

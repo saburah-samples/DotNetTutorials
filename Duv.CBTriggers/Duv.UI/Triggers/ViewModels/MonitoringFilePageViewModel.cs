@@ -72,8 +72,7 @@ namespace Duv.UI.Triggers.ViewModels
 			finally
 			{
 				fileEditor.Resume(CurrentFile);
-			}
-			
+			}			
 			OnPropertyChanged("Files");
 		}
 
@@ -114,12 +113,13 @@ namespace Duv.UI.Triggers.ViewModels
 			{
 				if (fileEditor.CurrentModel != value)
 				{
-					fileEditor.CurrentModel = value;
+                    fileEditor.Suspend(fileEditor.CurrentModel);
+                    fileEditor.Resume(value);
+
 					var file = fileEditor.CurrentModel;
 					if (file != null && file.Documents == null)
 					{
-						file = fileService.GetFileByPath(value.Name);
-						file.Documents = (file != null) ? file.Documents : new List<MonitoringDocument>();
+						file.Documents = fileService.FindDocuments(file.Id);
 					}
 					FileDocuments = (file != null) ? file.Documents : new List<MonitoringDocument>();
 				}

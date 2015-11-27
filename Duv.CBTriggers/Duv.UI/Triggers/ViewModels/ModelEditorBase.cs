@@ -9,7 +9,6 @@ namespace Duv.UI.Triggers.ViewModels
 	{
 		protected readonly IList<TModel> models;
 		protected readonly IDictionary<TModel, TModel> updatedModels;
-		private TModel currentModel;
 
 		public ModelEditorBase()
 		{
@@ -71,15 +70,6 @@ namespace Duv.UI.Triggers.ViewModels
 
 		protected abstract bool HasChanges(TModel current);
 
-		public TModel CurrentModel
-		{
-			get { return currentModel; }
-			set
-			{
-				Suspend(currentModel);
-				currentModel = value;
-				Resume(currentModel);
-			}
-		}
+		public TModel CurrentModel { get; private set; }
 	}
 }
