@@ -6,5 +6,6 @@
 		public const string Description = Name;
 		public const string DisplayName = Name;
 		public const int StartupTimeout = 10;
+		public const string LogName = "DuvServiceHost";
 	}
 }

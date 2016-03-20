@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration.Install;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.ServiceProcess;
@@ -35,11 +36,13 @@ namespace Duv.ServiceHost
 					switch (args[0].ToLower())
 					{
 						case "-install":
+							//CreateServiceHostEventLog();
 							InstallServiceHost();
 							StartServiceHost();
 							break;
 						case "-uninstall":
 							StopServiceHost();
+							//DeleteServiceHostEventLog();
 							UninstallServiceHost();
 							break;
 						case "-start":
@@ -57,6 +60,27 @@ namespace Duv.ServiceHost
 			{
 				Console.WriteLine(ex.Message);
 				Console.ReadKey();
+			}
+		}
+
+		private static void CreateServiceHostEventLog()
+		{
+			if (!EventLog.SourceExists(ServiceHostDescriptor.Name))
+			{
+				EventLog.CreateEventSource(ServiceHostDescriptor.Name, ServiceHostDescriptor.LogName);
+			}
+		}
+
+		private static void DeleteServiceHostEventLog()
+		{
+			if (EventLog.SourceExists(ServiceHostDescriptor.Name))
+			{
+				EventLog.DeleteEventSource(ServiceHostDescriptor.Name);
+			}
+
+			if (EventLog.Exists(ServiceHostDescriptor.LogName))
+			{
+				EventLog.Delete(ServiceHostDescriptor.LogName);
 			}
 		}
 

@@ -7,8 +7,16 @@ namespace Duv.ServiceHost
 	{
 		public ServiceHost()
 		{
+			AutoLog = false;
 			ServiceName = ServiceHostDescriptor.Name;
-			AutoLog = true;
+
+			EventLog = new System.Diagnostics.EventLog();
+			EventLog.Source = ServiceHostDescriptor.Name;
+			EventLog.Log = ServiceHostDescriptor.LogName;
+			if (!System.Diagnostics.EventLog.SourceExists(ServiceHostDescriptor.Name))
+			{
+				System.Diagnostics.EventLog.CreateEventSource(ServiceHostDescriptor.Name, ServiceHostDescriptor.LogName);
+			}
 		}
 
 		protected override void OnStart(string[] args)
