@@ -10,7 +10,7 @@ namespace Duv.ServiceHost
 			AutoLog = false;
 			ServiceName = ServiceHostDescriptor.Name;
 
-			EventLog = new System.Diagnostics.EventLog();
+			//EventLog = new System.Diagnostics.EventLog();
 			EventLog.Source = ServiceHostDescriptor.Name;
 			EventLog.Log = ServiceHostDescriptor.LogName;
 			if (!System.Diagnostics.EventLog.SourceExists(ServiceHostDescriptor.Name))

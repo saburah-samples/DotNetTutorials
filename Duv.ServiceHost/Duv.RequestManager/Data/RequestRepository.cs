@@ -20,9 +20,30 @@ namespace Duv.RequestManager.Data
 			requests = new Dictionary<long, Request>();
 		}
 
-		public IQueryable<Request> GetRequests()
+		public IQueryable<Request> FindRequests()
 		{
-			return requests.Values.AsQueryable();
+			return requests.Values.ToArray().AsQueryable();
+		}
+
+		public Request GetRequestById(long requestId)
+		{
+			try
+			{
+				if (requests.ContainsKey(requestId))
+				{
+					return requests[requestId];
+				}
+				else
+				{
+					return null;
+				}
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex.Message);
+				var message = string.Format("Failed to get request with Id {0}.", requestId);
+				throw new DataException(message, ex);
+			}
 		}
 
 		public long CreateRequest(Request request)
@@ -76,7 +97,7 @@ namespace Duv.RequestManager.Data
 
 		private long GetNewId()
 		{
-			return requests.Keys.Max() + 1;
+			return (requests.Any()) ? requests.Keys.Max() + 1 : 1;
 		}
 	}
 }

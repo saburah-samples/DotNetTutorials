@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Duv.RequestManager.Model;
+using System.Collections.Generic;
 
 namespace Duv.RequestManager.Data
 {
@@ -10,7 +11,9 @@ namespace Duv.RequestManager.Data
 	{
 		long CreateRequest(Request request);
 		void DeleteRequest(long requestId);
-		IQueryable<Request> GetRequests();
 		Request UpdateRequest(Request request);
+
+		IQueryable<Request> FindRequests();
+		Request GetRequestById(long id);
 	}
 }

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Duv.ServiceHost")]
+[assembly: AssemblyTitle("Duv.RequestManager.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Duv Systems")]
-[assembly: AssemblyProduct("Duv.ServiceHost")]
+[assembly: AssemblyProduct("Duv.RequestManager.Tests")]
 [assembly: AssemblyCopyright("Copyright © Duv Systems 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8c42e5f2-330f-4a47-902b-fc73156eb1e3")]
+[assembly: Guid("3691f766-7e76-466b-a5e1-6b33efabd8ce")]
 
 // Version information for an assembly consists of the following four values:
 //

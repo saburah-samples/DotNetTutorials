@@ -12,7 +12,7 @@ namespace Duv.RequestManager.Services
 {
 	//TODO: fix concurrency troubles, the request should be locked for modifications until this operation has completed
 	//TODO: about optimistic concurrency (locking) see: https://msdn.microsoft.com/en-us/library/aa0416cz(v=vs.110).aspx
-	class RequestQueueService
+	class RequestQueueService : IRequestQueueService
 	{
 		private readonly ILogger logger;
 		private readonly IRequestRepository repository;
@@ -23,28 +23,7 @@ namespace Duv.RequestManager.Services
 			repository = new RequestRepository();
 		}
 
-		public long CreateRequest(RequestType type, RequestSource source)
-		{
-			try
-			{
-				var request = new Request
-				{
-					Type = type,
-					State = RequestState.Draft,
-					Source = source
-				};
-				request.Id = repository.CreateRequest(request);
-				return request.Id;
-			}
-			catch (Exception ex)
-			{
-				logger.LogError(ex.Message);
-				var message = string.Format("Failed to create request of type {0} from source {1}.", type, source);
-				throw new DomainException(message, ex);
-			}
-		}
-
-		public RequestState SubmitRequest(Request request)
+		public long SubmitRequest(Request request)
 		{
 			if (request == null)
 			{
@@ -54,40 +33,29 @@ namespace Duv.RequestManager.Services
 
 			try
 			{
-				var requestState = repository.GetRequests()
-					.Single(e => e.Id == request.Id)
-					.State;
-				if (requestState != RequestState.Draft)
-				{
-					var message = string.Format("Failed to submit request with Id = {0}. It is already in state {1}.", request.Id, requestState);
-					throw new DomainException(message);
-				}
-
 				request.State = RequestState.InQueue;
-				request = repository.UpdateRequest(request);
-				return request.State;
+				request.Id = repository.CreateRequest(request);
+				return request.Id;
 			}
 			catch (Exception ex)
 			{
 				logger.LogError(ex.Message);
-				var message = string.Format("Failed to submit request with Id {0}.", request.Id);
+				var message = string.Format("Failed to submit request of type {0} from source {1}.", request.Type, request.Source);
 				throw new DomainException(message, ex);
 			}
 		}
 
 		public bool CancelRequest(long requestId)
 		{
+			Request existingRequest = repository.GetRequestById(requestId);
+			if (existingRequest.State != RequestState.InQueue)
+			{
+				var message = string.Format("Failed to cancel request with Id {0}. It is already in state {1}.", requestId, existingRequest.State);
+				throw new DomainException(message);
+			}
+
 			try
 			{
-				var requestState = repository.GetRequests()
-					.Single(e => e.Id == requestId)
-					.State;
-				if (requestState != RequestState.Draft)
-				{
-					var message = string.Format("Failed to cancel request with Id = {0}. It is already in state {1}.", requestId, requestState);
-					throw new DomainException(message);
-				}
-
 				repository.DeleteRequest(requestId);
 				return true;
 			}

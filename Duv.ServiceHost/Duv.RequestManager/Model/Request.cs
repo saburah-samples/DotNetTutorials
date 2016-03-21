@@ -8,7 +8,7 @@ namespace Duv.RequestManager.Model
 {
 	public class Request
 	{
-		public long Id { get; internal set; }
+		public long Id { get; set; }
 		public RequestType Type { get; set; }
 		public RequestState State { get; set; }
 		public RequestSource Source { get; set; }

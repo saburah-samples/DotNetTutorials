@@ -2,7 +2,6 @@
 {
 	public enum RequestState
 	{
-		Draft,
 		InQueue,
 		InProcess,
 		Completed,
