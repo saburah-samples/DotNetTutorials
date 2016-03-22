@@ -30,7 +30,11 @@ namespace Duv.RequestManager.Services
 				var message = string.Format("Failed to submit request. Request should not be null.");
 				throw new DomainException(message);
 			}
-
+			if (request.Id > 0 || request.State != RequestState.InQueue)
+			{
+				var message = string.Format("Failed to submit request. Request has invalid state.");
+				throw new DomainException(message);
+			}
 			try
 			{
 				request.State = RequestState.InQueue;
@@ -50,7 +54,7 @@ namespace Duv.RequestManager.Services
 			Request existingRequest = repository.GetRequestById(requestId);
 			if (existingRequest.State != RequestState.InQueue)
 			{
-				var message = string.Format("Failed to cancel request with Id {0}. It is already in state {1}.", requestId, existingRequest.State);
+				var message = string.Format("Failed to cancel request with Id {0}. It is in state {1}.", requestId, existingRequest.State);
 				throw new DomainException(message);
 			}
 
@@ -63,6 +67,34 @@ namespace Duv.RequestManager.Services
 			{
 				logger.LogError(ex.Message);
 				var message = string.Format("Failed to cancel request with Id {0}.", requestId);
+				throw new DomainException(message, ex);
+			}
+		}
+
+		public IEnumerable<Request> FindRequests()
+		{
+			try
+			{
+				return repository.FindRequests();
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex.Message);
+				var message = "Failed to find requests.";
+				throw new DomainException(message, ex);
+			}
+		}
+
+		public Request GetRequestById(long requestId)
+		{
+			try
+			{
+				return repository.GetRequestById(requestId);
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex.Message);
+				var message = string.Format("Failed to get request with Id {0}.", requestId);
 				throw new DomainException(message, ex);
 			}
 		}

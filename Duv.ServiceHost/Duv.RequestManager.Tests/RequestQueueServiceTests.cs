@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Duv.RequestManager.Services;
 using Duv.RequestManager.Model;
+using System.Linq;
 
 namespace Duv.RequestManager.Tests
 {
@@ -20,13 +21,24 @@ namespace Duv.RequestManager.Tests
 				Source = RequestSource.Manual,
 			};
 
+			var requests = queue.FindRequests();
+			Assert.IsNotNull(requests);
+
 			request.Id = queue.SubmitRequest(request);
 			Assert.IsNotNull(request);
 			Assert.IsTrue(request.Id > 0);
-			Assert.AreEqual(RequestState.InQueue, request.State);
+			Assert.IsFalse(requests.Any(e => e.Id == request.Id));
+			requests = queue.FindRequests();
+			Assert.IsTrue(requests.Any(e => e.Id == request.Id));
+			request = queue.GetRequestById(request.Id);
+			Assert.IsNotNull(request);
 
 			var canceled = queue.CancelRequest(request.Id);
 			Assert.IsTrue(canceled);
+			requests = queue.FindRequests();
+			Assert.IsFalse(requests.Any(e => e.Id == request.Id));
+			request = queue.GetRequestById(request.Id);
+			Assert.IsNull(request);
 		}
 	}
 }
